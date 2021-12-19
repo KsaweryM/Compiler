@@ -15,9 +15,7 @@ number:
 	./mw n
 
 clean:
-	mv test.c test.t
-	rm -f *.c *.h output.txt
-	mv test.t test.c
+	rm -rf build/
 
 cleanall: clean
 	rm -f calc
