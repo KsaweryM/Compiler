@@ -316,7 +316,8 @@ int main() {
 	secondComplex->addInstruction(complex);
 	secondComplex->addInstruction(new SUB(VMregister::c));
 	secondComplex->addInstruction(new ADD(VMregister::c));
-
+	secondComplex->addInstruction(new HALT());
+	
 	secondComplex->execute();
 
 	delete secondComplex;

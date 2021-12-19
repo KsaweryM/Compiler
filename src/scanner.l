@@ -1,7 +1,7 @@
 %{
 #include <iostream>
 #include <string>
-#include "calc_y.h"
+#include "parser_y.h"
 
 int yylex();
 
