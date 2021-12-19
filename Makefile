@@ -18,4 +18,4 @@ exp2:
 	./build/ex2 > build/output2.txt
 	./vm/vm build/output2.txt
 clean:
-	rm -rf build/c
+	rm -rf build/

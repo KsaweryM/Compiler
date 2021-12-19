@@ -1,5 +1,5 @@
-#ifndef COMPLEX_COMMAND_h
-#define COMPLEX_COMMAND_h
+#ifndef COMPLEX_COMMAND_H
+#define COMPLEX_COMMAND_H
 
 #include <vector>
 #include "Command.h"
@@ -9,7 +9,7 @@ private:
 	std::vector<Command*> instructions;
 
 public:
-	void addInstruction(Command* Instruction) {
+	void addCommand(Command* Instruction) {
 		instructions.push_back(Instruction);
 	}
 
