@@ -2,52 +2,13 @@
     #include <iostream>
     #include "../inc/Commands/commands.h"
     #include "../inc/VMregister.h"
+    #include "../inc/ParserCommands/commands.h"
 
     extern int yylex();
     extern int yyparse();
     int yyerror(std::string);
-
-    Command* push(int n) {
-        return new PUSH(n);
-    }
-
-    Command* add(Command* exp1, Command* exp2) {
-        ADD_TWO_NUMBERS_FROM_STACK_AND_PUSH_RESULT_ON_STACK* ADD_NUMBERS = new ADD_TWO_NUMBERS_FROM_STACK_AND_PUSH_RESULT_ON_STACK();
-        
-        ADD_NUMBERS->pushCommandFront(exp1);
-        ADD_NUMBERS->pushCommandFront(exp2);
-        return ADD_NUMBERS;
-    }
-
-    Command* subtract(Command* exp1, Command* exp2) {
-        SUBTRACT_TWO_NUMBERS_FROM_STACK_AND_PUSH_RESULT_ON_STACK* SUBTRACT_NUMBERS = new SUBTRACT_TWO_NUMBERS_FROM_STACK_AND_PUSH_RESULT_ON_STACK();
-
-        SUBTRACT_NUMBERS->pushCommandFront(exp1);
-        SUBTRACT_NUMBERS->pushCommandFront(exp2);
-
-        return SUBTRACT_NUMBERS;
-    }
-
-    Command* changeSign(Command* exp) {
-        CHANGE_SIGN_ON_STACK* CHANGE_SIGN = new CHANGE_SIGN_ON_STACK();
-        
-        CHANGE_SIGN->pushCommandFront(exp);
-
-        return CHANGE_SIGN;
-    }
-
-    void createLine(Command* command) {
-        ComplexCommand* complex = new ComplexCommand();
-
-        complex->pushCommandBack(command);
-        complex->pushCommandBack(new LOAD_FROM_STACK_TO_REGISTER(VMregister::a));
-        complex->pushCommandBack(new PUT());
-
-        complex->execute();
-
-        delete complex;
-    }
 %}
+
 %union
 {
     int number;

@@ -1,0 +1,13 @@
+#ifndef PARSER_SUBTRACT_H
+#define PARSER_SUBTRACT_H
+
+Command* subtract(Command* exp1, Command* exp2) {
+    SUBTRACT_TWO_NUMBERS_FROM_STACK_AND_PUSH_RESULT_ON_STACK* SUBTRACT_NUMBERS = new SUBTRACT_TWO_NUMBERS_FROM_STACK_AND_PUSH_RESULT_ON_STACK();
+
+    SUBTRACT_NUMBERS->pushCommandFront(exp1);
+    SUBTRACT_NUMBERS->pushCommandFront(exp2);
+
+    return SUBTRACT_NUMBERS;
+}
+
+#endif
