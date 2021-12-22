@@ -7,8 +7,8 @@
 class POP : public ComplexCommand {
 public:
 	POP(int n) {
-        addCommand(new LOAD(VMregister::h));
-        addCommand(new DEC(VMregister::h));
+        pushCommandBack(new LOAD(VMregister::h));
+        pushCommandBack(new DEC(VMregister::h));
     }
 };
 

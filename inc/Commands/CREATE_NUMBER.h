@@ -8,20 +8,20 @@ class CREATE_NUMBER : public ComplexCommand {
 private:
     void createNumber(int n) {
         if (n <= 1) {   
-            addCommand(new RESET(VMregister::a));
-            addCommand(new RESET(VMregister::b));
-            addCommand(new INC(VMregister::b));
+            pushCommandBack(new RESET(VMregister::a));
+            pushCommandBack(new RESET(VMregister::b));
+            pushCommandBack(new INC(VMregister::b));
 
             if (n == 1) {
-                addCommand(new ADD(VMregister::b));
+                pushCommandBack(new ADD(VMregister::b));
             }
         }
         else {
             createNumber(n / 2);
-            addCommand(new SHIFT(VMregister::b));
+            pushCommandBack(new SHIFT(VMregister::b));
 
             if (n % 2) {
-                addCommand(new ADD(VMregister::b));
+                pushCommandBack(new ADD(VMregister::b));
             }
         }
     }

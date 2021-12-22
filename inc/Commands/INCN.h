@@ -8,7 +8,7 @@ class INCN : public ComplexCommand {
 public:
     INCN(VMregister instructionRegister, int k) {
         for (int i = 0; i < k; i++) {
-            addCommand(new INC(instructionRegister));
+            pushCommandBack(new INC(instructionRegister));
         }
     }
 };

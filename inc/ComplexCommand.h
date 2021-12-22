@@ -1,22 +1,26 @@
 #ifndef COMPLEX_COMMAND_H
 #define COMPLEX_COMMAND_H
 
-#include <vector>
+#include <deque>
 #include "Command.h"
 
 class ComplexCommand : public Command {
 private:
-	std::vector<Command*> instructions;
+	std::deque<Command*> instructions;
 
 public:
-	void addCommand(Command* Instruction) {
+	void pushCommandFront(Command* Instruction) {
+		instructions.push_front(Instruction);
+	}
+
+	void pushCommandBack(Command* Instruction) {
 		instructions.push_back(Instruction);
 	}
 
 	int getLength() override {
 		int length = 0;
 
-		std::vector<Command*>::iterator it;
+		std::deque<Command*>::iterator it;
 
 		for (it = instructions.begin(); it != instructions.end(); it++) {
 			length += (*it)->getLength();
@@ -26,7 +30,7 @@ public:
 	}
 
 	void execute() override {
-		std::vector<Command*>::iterator it;
+		std::deque<Command*>::iterator it;
 
 		for (it = instructions.begin(); it != instructions.end(); it++) {
 			(*it)->execute();
@@ -34,7 +38,7 @@ public:
 	}
 
 	~ComplexCommand() override {
-		std::vector<Command*>::iterator it;
+		std::deque<Command*>::iterator it;
 
 		for (it = instructions.begin(); it != instructions.end(); it++) {
 			delete* it;

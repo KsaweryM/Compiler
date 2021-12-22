@@ -7,10 +7,10 @@
 class LOAD_FROM_STACK_TO_REGISTER : public ComplexCommand {
 public:
 	LOAD_FROM_STACK_TO_REGISTER(VMregister instructionRegister) {
-        addCommand(new SWAP(instructionRegister));
-        addCommand(new LOAD(VMregister::h));
-        addCommand(new SWAP(instructionRegister));
-        addCommand(new DEC(VMregister::h));
+        pushCommandBack(new SWAP(instructionRegister));
+        pushCommandBack(new LOAD(VMregister::h));
+        pushCommandBack(new SWAP(instructionRegister));
+        pushCommandBack(new DEC(VMregister::h));
     }
 };
 

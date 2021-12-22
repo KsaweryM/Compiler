@@ -8,7 +8,7 @@ class DECN : public ComplexCommand {
 public:
     DECN(VMregister instructionRegister, int k) {
         for (int i = 0; i < k; i++) {
-            addCommand(new DEC(instructionRegister));
+            pushCommandBack(new DEC(instructionRegister));
         }
     }
 };

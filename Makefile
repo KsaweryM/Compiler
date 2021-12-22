@@ -1,13 +1,19 @@
 FLAGS = -W -O3
 
 make: clean
-	mkdir -p build
+	rm -rf build
+	mkdir  build
 	bison -o build/parser_y.c -d src/parser.y
 	flex -o build/scanner_l.c src/scanner.l
 	g++ $(FLAGS) -o build/compiler build/parser_y.c build/scanner_l.c -lm 
 	cat test/input.txt | ./build/compiler > build/asembler
-	grep "#" test/input.txt
 	./vm/vm build/asembler
+
+test: 	build/asembler	
+	rm build/asembler
+	cat test/input.txt | ./build/compiler > build/asembler
+	grep "#" test/input.txt
+	#./vm/vm build/asembler
 exp1:
 	mkdir -p build
 	g++ -o build/ex1 experiment/experiment1.c
