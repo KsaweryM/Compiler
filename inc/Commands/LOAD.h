@@ -13,7 +13,7 @@ public:
 	}
 
 	void execute() override {
-		std::cout << "PUT " << registerToString(instructionRegister) << std::endl;
+		std::cout << "LOAD " << registerToString(instructionRegister) << std::endl;
 	}
 };
 

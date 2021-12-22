@@ -6,6 +6,7 @@ make: clean
 	flex -o build/scanner_l.c src/scanner.l
 	g++ $(FLAGS) -o build/compiler build/parser_y.c build/scanner_l.c -lm 
 	cat test/input.txt | ./build/compiler > build/asembler
+	grep "#" test/input.txt
 	./vm/vm build/asembler
 exp1:
 	mkdir -p build

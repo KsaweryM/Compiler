@@ -17,7 +17,7 @@ private:
             }
         }
         else {
-            CREATE_NUMBER(n / 2);
+            createNumber(n / 2);
             addCommand(new SHIFT(VMregister::b));
 
             if (n % 2) {

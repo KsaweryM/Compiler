@@ -338,14 +338,8 @@ void MULTI() {
 }
 
 int main() {
-    CLEAR_STACK();
-    RESET_REAGISTERS();
-    PUSH(10);
-    PUSH(20);
-    CHANGE_SIGN_ON_STACK();
-    ADD_TWO_NUMBERS_FROM_STACK_AND_PUSH_RESULT_ON_STACK();
-    COPY_FROM_STACK_TO_REGISTER(a);
-    DISPLAY_REGISTERS();
-    HALT();
+    std::cout << "!!!" << std::endl;
+    PUSH(3);
+    std::cout << "!!!!" << std::endl;
 	return 0;
 }

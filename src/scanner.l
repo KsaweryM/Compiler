@@ -17,7 +17,7 @@ int yylex();
 \/      { return TOKEN_DIV;                                }
 \(      { return TOKEN_LNAW;                               }
 \)      { return TOKEN_PNAW;                               }
-\n      { return TOKEN_END;                                }
+\n     { return TOKEN_END;                                }
 .       { return TOKEN_ERROR;                              }
 %%
 

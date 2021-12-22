@@ -13,22 +13,10 @@ public:
         addCommand(new CREATE_NUMBER(n));
         addCommand(new LOAD_FROM_STACK_TO_REGISTER(VMregister::b));
         addCommand(new DEC(VMregister::h));  
-        //TOOD      
+        addCommand(new STORE(VMregister::h));
+        addCommand(new INC(VMregister::h));
+        addCommand(new LOAD_FROM_STACK_TO_REGISTER(VMregister::a));
     }
 };
 
 #endif
-
-/*
-void PUSH(int n) {
-    INC(h);
-    SAVE_REGISTER_ON_STACK(a);
-    SAVE_REGISTER_ON_STACK(b);
-	CREATE_NUMBER(n);
-    LOAD_FROM_STACK_TO_REGISTER(b);
-	DEC(h);
-    STORE(h);
-    INC(h);
-    LOAD_FROM_STACK_TO_REGISTER(a);
-}
-*/
