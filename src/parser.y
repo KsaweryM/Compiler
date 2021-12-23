@@ -1,10 +1,6 @@
 %{
     #include <iostream>
-
-    #include "../inc/VMregister.h"
-    #include "../inc/Commands/commands.h"
-    #include "../inc/ParserHelper/commands.h"
-    #include "../inc/VariableDirector.h"
+    //#include "../inc/Command.h"
 
     extern int yylex();
     extern int yyparse();
@@ -14,40 +10,60 @@
 %union
 {
     int number;
-    Command* cmd;
+    
+    char* text;
 }
 
-%token <number> TOKEN_NUMBER
+%token <number> VAR
+%token <number> BEGIN
+%token <number> END
+%token <number> ASSIGN
+%left  <number> TOKEN_PLUS
+%left  <number> TOKEN_MINUS
+%token <number> LEFT_SQUARE_BRACKET
+%token <number> RIGHT_SQUARE_BRACKET
+%token <number> SEMICOLON
+%token <number> COLON
+%token <number> COMMA
+%token <number> ERROR
 
-%left <cmd> TOKEN_PLUS
-%left <cmd> TOKEN_MINUS
-%left <cmd> TOKEN_MULTI
-%left <cmd> TOKEN_DIV
-%token <cmd> TOKEN_LNAW
-%token <cmd> TOKEN_PNAW
-%token <cmd> TOKEN_ERROR
-%token <cmd> TOKEN_END
-%token <cmd> TOKEN_FINISH
-%precedence <cmd> TOKEN_NEG
+%token <number> pidentifier
+%token <number> num
 
-%type<cmd> input
-%type<cmd> line
-%type<cmd> exp
-
+%type <number> input
+%type <number> program
+%type <number> declarations
+%type <number> commands
+%type <number> command
+%type <number> identifier
+%type <number> expression
+%type <number> value
 %%
-input: %empty {  }
-    | input line {  }
-;
-line: exp TOKEN_END {  createLine($1);       }
-    | TOKEN_END {    }
-;
+input: program
 
-exp: TOKEN_NUMBER                { $$ = push($1); }
-    | exp TOKEN_PLUS exp         { $$ = add($1, $3);  }
-    | exp TOKEN_MINUS exp        { $$ = subtract($1, $3);  }
-    | exp TOKEN_MULTI exp        {  }
-    | TOKEN_LNAW exp TOKEN_PNAW 
-    | TOKEN_MINUS exp %prec TOKEN_NEG { $$ = changeSign($1);  }
+program:          VAR declarations BEGIN commands END
+                | BEGIN commands END
+
+declarations:     declarations COMMA pidentifier
+                | declarations COMMA pidentifier LEFT_SQUARE_BRACKET num COLON num RIGHT_SQUARE_BRACKET
+                | pidentifier
+                | pidentifier LEFT_SQUARE_BRACKET num COLON num RIGHT_SQUARE_BRACKET
+
+commands:         commands command
+                | command
+
+command:          identifier ASSIGN expression SEMICOLON
+
+expression:       value
+                | value TOKEN_PLUS value
+                | value TOKEN_MINUS value
+
+value:            num
+                | identifier
+
+identifier:       pidentifier
+                | pidentifier LEFT_SQUARE_BRACKET pidentifier RIGHT_SQUARE_BRACKET
+                | pidentifier LEFT_SQUARE_BRACKET num RIGHT_SQUARE_BRACKET
 %%
 
 int yyerror(std::string error) {	
@@ -56,8 +72,5 @@ int yyerror(std::string error) {
 
 int main() {
     yyparse();
-    HALT* halt = new HALT();
-    halt->execute(); 
-    delete halt;
     return 0;
 }

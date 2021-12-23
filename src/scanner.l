@@ -1,7 +1,6 @@
 %{
 #include <iostream>
 #include <string>
-#include "../inc/Commands/commands.h"
 #include "parser_y.h"
 
 int yylex();
@@ -10,14 +9,13 @@ int yylex();
 %%
 [ \t] ;
 ^#.*\n ;
-[0-9]+  { yylval.number = std::atoi(yytext); return TOKEN_NUMBER; }
+"VAR"     { return VAR; }
+"BEGIN"   { return BEGIN; }
+"END"     { return END; }
 \+      { return TOKEN_PLUS;                               }
 \-      { return TOKEN_MINUS;                              }
-\*      { return TOKEN_MULTI;                              }
-\/      { return TOKEN_DIV;                                }
-\(      { return TOKEN_LNAW;                               }
-\)      { return TOKEN_PNAW;                               }
-\n     { return TOKEN_END;                                }
+\[      { return TOKEN_LNAW;                               }
+\]      { return TOKEN_PNAW;                               }
 .       { return TOKEN_ERROR;                              }
 %%
 
