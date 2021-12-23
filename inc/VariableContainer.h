@@ -28,6 +28,10 @@ public:
         return variables[index - firstIndex]->assign(value);
     }
 
+    ComplexCommand* assignByValueFromStack(int index) {
+        return variables[index - firstIndex]->assignByValueFromStack();
+    }
+
     ComplexCommand* pushOnStack(int index) {
         return variables[index - firstIndex]->pushOnStack();
     }

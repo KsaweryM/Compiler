@@ -33,9 +33,18 @@ public:
         return variableContainers[name]->assign(0, value);
     }
 
+    Command* assignVariableByValueFromStack(std::string name) {
+        return variableContainers[name]->assignByValueFromStack(0);
+    }
+
     Command* assignVariableFromArray(std::string name, int index, int value) {
         return variableContainers[name]->assign(index, value);
     }
+
+    Command* assignVariableFromArrayByValueFromStack(std::string name, int index) {
+        return variableContainers[name]->assignByValueFromStack(index);
+    }
+    
 
     Command* pushVariableOntoStack(std::string name) {
         return variableContainers[name]->pushOnStack(0);

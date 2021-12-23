@@ -21,7 +21,7 @@ exp1:
 	./build/ex1 > build/output1.txt
 	./vm/vm build/output1.txt
 exp2:
-	mkdir -p build	
+	rm -f build/output2.txt build/exp2
 	g++ -o build/ex2 experiment/experiment2.c
 	./build/ex2 > build/output2.txt
 	./vm/vm build/output2.txt

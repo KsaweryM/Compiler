@@ -35,6 +35,32 @@ public:
         return command;
     }
 
+    ComplexCommand* assignByValueFromStack() {
+        ComplexCommand* command = new ComplexCommand();
+
+        command->pushCommandBack(new SAVE_REGISTER_ON_STACK(VMregister::a));
+        command->pushCommandBack(new SAVE_REGISTER_ON_STACK(VMregister::b));
+
+        command->pushCommandBack(new PUSH(address));
+
+        command->pushCommandBack(new LOAD_FROM_STACK_TO_REGISTER(VMregister::b));
+        
+        command->pushCommandBack(new DECN(VMregister::h, 2));
+
+        command->pushCommandBack(new COPY_FROM_STACK_TO_REGISTER(VMregister::a));
+
+        command->pushCommandBack(new STORE(VMregister::b));
+
+        command->pushCommandBack(new INCN(VMregister::h, 2));
+
+        command->pushCommandBack(new LOAD_FROM_STACK_TO_REGISTER(VMregister::b));
+        command->pushCommandBack(new LOAD_FROM_STACK_TO_REGISTER(VMregister::a));
+
+        command->pushCommandBack(new DEC(VMregister::h));        
+
+        return command;
+    }
+
     ComplexCommand* pushOnStack() {
         ComplexCommand* command = new ComplexCommand();
 
