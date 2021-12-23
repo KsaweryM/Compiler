@@ -14,18 +14,18 @@
     char* text;
 }
 
-%token <number> VAR
-%token <number> BEGIN
-%token <number> END
+%token <number> TOKEN_VAR
+%token <number> TOKEN_BEGIN
+%token <number> TOKEN_END
 %token <number> ASSIGN
 %left  <number> TOKEN_PLUS
 %left  <number> TOKEN_MINUS
-%token <number> LEFT_SQUARE_BRACKET
-%token <number> RIGHT_SQUARE_BRACKET
-%token <number> SEMICOLON
-%token <number> COLON
-%token <number> COMMA
-%token <number> ERROR
+%token <number> TOKEN_LEFT_SQUARE_BRACKET
+%token <number> TOKEN_RIGHT_SQUARE_BRACKET
+%token <number> TOKEN_SEMICOLON
+%token <number> TOKEN_COLON
+%token <number> TOKEN_COMMA
+%token <number> TOKEN_ERROR
 
 %token <number> pidentifier
 %token <number> num
@@ -41,18 +41,18 @@
 %%
 input: program
 
-program:          VAR declarations BEGIN commands END
-                | BEGIN commands END
+program:          TOKEN_VAR declarations TOKEN_BEGIN commands TOKEN_END
+                | TOKEN_BEGIN commands TOKEN_END
 
-declarations:     declarations COMMA pidentifier
-                | declarations COMMA pidentifier LEFT_SQUARE_BRACKET num COLON num RIGHT_SQUARE_BRACKET
+declarations:     declarations TOKEN_COMMA pidentifier
+                | declarations TOKEN_COMMA pidentifier TOKEN_LEFT_SQUARE_BRACKET num TOKEN_COLON num TOKEN_RIGHT_SQUARE_BRACKET
                 | pidentifier
-                | pidentifier LEFT_SQUARE_BRACKET num COLON num RIGHT_SQUARE_BRACKET
+                | pidentifier TOKEN_LEFT_SQUARE_BRACKET num TOKEN_COLON num TOKEN_RIGHT_SQUARE_BRACKET
 
 commands:         commands command
                 | command
 
-command:          identifier ASSIGN expression SEMICOLON
+command:          identifier ASSIGN expression TOKEN_SEMICOLON
 
 expression:       value
                 | value TOKEN_PLUS value
@@ -62,8 +62,8 @@ value:            num
                 | identifier
 
 identifier:       pidentifier
-                | pidentifier LEFT_SQUARE_BRACKET pidentifier RIGHT_SQUARE_BRACKET
-                | pidentifier LEFT_SQUARE_BRACKET num RIGHT_SQUARE_BRACKET
+                | pidentifier TOKEN_LEFT_SQUARE_BRACKET pidentifier TOKEN_RIGHT_SQUARE_BRACKET
+                | pidentifier TOKEN_LEFT_SQUARE_BRACKET num TOKEN_RIGHT_SQUARE_BRACKET
 %%
 
 int yyerror(std::string error) {	
