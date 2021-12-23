@@ -2,12 +2,9 @@
 #define VARIABLE_H
 
 #include <string>
-#include "VMregister.h"
-#include "Data.h"
 #include "Commands/commands.h"
-#include "ComplexCommand.h"
 
-class Variable : public Data {
+class Variable {
 private:
     int address;
     bool isInitialized;
@@ -18,11 +15,7 @@ public:
         isInitialized = false;
     }
 
-    int getAddress() {
-        return address;
-    }
-
-    ComplexCommand* assign(int value) override {
+    ComplexCommand* assign(int value) {
         ComplexCommand* command = new ComplexCommand();
         
         command->pushCommandBack(new SAVE_REGISTER_ON_STACK(VMregister::a));
@@ -42,7 +35,7 @@ public:
         return command;
     }
 
-    ComplexCommand* pushOnStack() override {
+    ComplexCommand* pushOnStack() {
         ComplexCommand* command = new ComplexCommand();
 
         command->pushCommandBack(new INC(VMregister::h));

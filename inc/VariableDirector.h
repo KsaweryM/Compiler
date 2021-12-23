@@ -1,0 +1,53 @@
+#ifndef VARIABLE_DIRECTOR_H
+#define VARIABLE_DIRECTOR_H
+
+#include <string>
+#include <map>
+
+#include "VariableContainer.h"
+#include "ComplexCommand.h"
+
+class VariableDirector {
+private:
+    int stack = 0;
+    std::map<std::string, VariableContainer*> variableContainers;
+
+public:
+    Command* declareVariable(std::string name) {
+        variableContainers[name] = new VariableContainer(stack, 1);
+        stack += 1;
+
+        return new INC(VMregister::h);
+    }
+
+    void declareArray(std::string name, int size) {
+        variableContainers[name] = new VariableContainer(stack, size);
+        stack += size;       
+    }
+
+    Command* assignVariable(std::string name, int value) {
+        return variableContainers[name]->assign(0, value);
+    }
+
+    Command* assignVariableFromArray(std::string name, int index, int value) {
+        return variableContainers[name]->assign(index, value);
+    }
+
+    Command* pushVariableOntoStack(std::string name) {
+        return variableContainers[name]->pushOnStack(0);
+    }
+
+    Command* pushVariableFromArrayOntoStack(std::string name, int index) {
+        return variableContainers[name]->pushOnStack(index);
+    }
+
+    ~VariableDirector() {
+        std::map<std::string, VariableContainer*>::iterator it;
+
+		for (it = variableContainers.begin(); it != variableContainers.end(); it++) {
+			delete it->second;
+		}
+    }
+};
+
+#endif
