@@ -14,8 +14,9 @@ test: 	build/asembler
 	cat test/input.txt | ./build/compiler > build/asembler
 	grep "#" test/input.txt
 	#./vm/vm build/asembler
+
 exp1:
-	mkdir -p build
+	rm -f build/output1.txt build/exp1
 	g++ -o build/ex1 experiment/experiment1.c
 	./build/ex1 > build/output1.txt
 	./vm/vm build/output1.txt

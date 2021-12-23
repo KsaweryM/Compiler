@@ -3,6 +3,7 @@
     #include "../inc/Commands/commands.h"
     #include "../inc/VMregister.h"
     #include "../inc/ParserCommands/commands.h"
+    #include "../inc/DataTable.h"
 
     extern int yylex();
     extern int yyparse();

@@ -1,6 +1,7 @@
 #ifndef COMMANDS_H
 #define COMMANDS_H
 
+#include "../ComplexCommand.h"
 #include "ADD.h"
 #include "DEC.h"
 #include "DECN.h"
@@ -20,11 +21,18 @@
 #include "SUB.h"
 #include "SWAP.h"
 #include "POP.h"
+#include "RESET_STACK.h"
 #include "CREATE_NUMBER.h"
 #include "SAVE_REGISTER_ON_STACK.h"
 #include "LOAD_FROM_STACK_TO_REGISTER.h"
+#include "COPY_FROM_STACK_TO_REGISTER.h"
 #include "PUSH.h"
 #include "ADD_TWO_NUMBERS_FROM_STACK_AND_PUSH_RESULT_ON_STACK.h"
 #include "CHANGE_SIGN_ON_STACK.h"
 #include "SUBTRACT_TWO_NUMBERS_FROM_STACK_AND_PUSH_RESULT_ON_STACK.h"
+#include "DISPLAY_REGISTERS.h"
+#include "RESET_REAGISTERS.h"
+#include "CREATE_TEST_REGISTERS.h"
+#include "DISPLAY_REGISTER.h"
+
 #endif
