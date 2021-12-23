@@ -20,9 +20,11 @@ public:
         return new INC(VMregister::h);
     }
 
-    void declareArray(std::string name, int size) {
+    Command* declareArray(std::string name, int size) {
         variableContainers[name] = new VariableContainer(stack, size);
-        stack += size;       
+        stack += size; 
+
+        return new INCN(VMregister::h, size);      
     }
 
     Command* assignVariable(std::string name, int value) {

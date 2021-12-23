@@ -17,26 +17,22 @@ int main() {
     command->pushCommandBack(variableDirector->declareVariable("b"));
     command->pushCommandBack(variableDirector->declareVariable("c"));
 
+    command->pushCommandBack(variableDirector->declareArray("ABC", 3));
+
     command->pushCommandBack(variableDirector->assignVariable("a", 10));
     command->pushCommandBack(variableDirector->assignVariable("b", 20));
     command->pushCommandBack(variableDirector->assignVariable("c", 30));
 
-    command->pushCommandBack(new DISPLAY_STACK_N(3));
+    command->pushCommandBack(variableDirector->assignVariableFromArray("ABC", 0, 100));
+    command->pushCommandBack(variableDirector->assignVariableFromArray("ABC", 1, 200));
+    command->pushCommandBack(variableDirector->assignVariableFromArray("ABC", 2, 300));
+    
+    command->pushCommandBack(variableDirector->pushVariableFromArrayOntoStack("ABC", 0));
 
-    command->pushCommandBack(new DISPLAY_REGISTERS());
+    command->pushCommandBack(variableDirector->assignVariableFromArray("ABC", 0, 1000));
 
-    command->pushCommandBack(variableDirector->pushVariableOntoStack("c"));
-
-    command->pushCommandBack(variableDirector->assignVariable("c", 300));
-    command->pushCommandBack(variableDirector->pushVariableOntoStack("c"));
-
-    command->pushCommandBack(variableDirector->assignVariable("b", 2000));
-
-    command->pushCommandBack(new DISPLAY_STACK_N(5));    
-
-    command->pushCommandBack(new DISPLAY_REGISTERS());
-    command->pushCommandBack(new COPY_FROM_STACK_TO_REGISTER(VMregister::a));
-    command->pushCommandBack(new PUT());
+    command->pushCommandBack(new DISPLAY_STACK_N(7));
+    //command->pushCommandBack(new DISPLAY_REGISTERS());
     
     command->pushCommandBack(new HALT());
     command->execute();
