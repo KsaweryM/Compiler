@@ -36,6 +36,10 @@ public:
     Command* assignVariableInArray(std::string arrayName, int index, int value) {
         return 0;
     }
+
+    Command* pushVariableOnStack(std::string variableName) {
+        return data[variableName]->pushOnStack();
+    }
 };
 
 #endif

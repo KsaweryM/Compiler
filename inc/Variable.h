@@ -24,6 +24,7 @@ public:
 
     ComplexCommand* assign(int value) override {
         ComplexCommand* command = new ComplexCommand();
+        
         command->pushCommandBack(new SAVE_REGISTER_ON_STACK(VMregister::a));
         command->pushCommandBack(new SAVE_REGISTER_ON_STACK(VMregister::b));
         
@@ -34,6 +35,26 @@ public:
         command->pushCommandBack(new LOAD_FROM_STACK_TO_REGISTER(VMregister::a));
         
         command->pushCommandBack(new STORE(VMregister::b));
+
+        command->pushCommandBack(new LOAD_FROM_STACK_TO_REGISTER(VMregister::b));
+        command->pushCommandBack(new LOAD_FROM_STACK_TO_REGISTER(VMregister::a));
+
+        return command;
+    }
+
+    ComplexCommand* pushOnStack() override {
+        ComplexCommand* command = new ComplexCommand();
+
+        command->pushCommandBack(new INC(VMregister::h));
+        command->pushCommandBack(new SAVE_REGISTER_ON_STACK(VMregister::a));
+        command->pushCommandBack(new SAVE_REGISTER_ON_STACK(VMregister::b));
+        
+        command->pushCommandBack(new PUSH(address));
+        command->pushCommandBack(new LOAD_FROM_STACK_TO_REGISTER(VMregister::b));
+        command->pushCommandBack(new LOAD(VMregister::b));
+        command->pushCommandBack(new DECN(VMregister::h, 2));
+        command->pushCommandBack(new STORE(VMregister::h));
+        command->pushCommandBack(new INCN(VMregister::h, 2));
 
         command->pushCommandBack(new LOAD_FROM_STACK_TO_REGISTER(VMregister::b));
         command->pushCommandBack(new LOAD_FROM_STACK_TO_REGISTER(VMregister::a));

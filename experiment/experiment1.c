@@ -15,14 +15,27 @@ int main() {
     command->pushCommandBack(table->declareVariable("a"));
     command->pushCommandBack(table->declareVariable("b"));
     command->pushCommandBack(table->declareVariable("c"));
+
     command->pushCommandBack(table->assignVariable("a", 10));
     command->pushCommandBack(table->assignVariable("b", 20));
     command->pushCommandBack(table->assignVariable("c", 30));
 
-    command->pushCommandBack(new DISPLAY_REGISTERS());
+    //command->pushCommandBack(new DISPLAY_STACK_N(3));
 
-    command->pushCommandBack(new COPY_FROM_STACK_TO_REGISTER(VMregister::a));
-    command->pushCommandBack(new PUT());
+    //command->pushCommandBack(new DISPLAY_REGISTERS());
+
+    command->pushCommandBack(table->pushVariableOnStack("c"));
+
+    command->pushCommandBack(table->assignVariable("c", 300));
+    command->pushCommandBack(table->pushVariableOnStack("c"));
+
+    command->pushCommandBack(table->assignVariable("b", 2000));
+
+    //command->pushCommandBack(new DISPLAY_STACK_N(5));    
+
+    command->pushCommandBack(new DISPLAY_REGISTERS());
+    //command->pushCommandBack(new COPY_FROM_STACK_TO_REGISTER(VMregister::a));
+    //command->pushCommandBack(new PUT());
     
     command->pushCommandBack(new HALT());
     command->execute();

@@ -37,6 +37,10 @@ public:
 
         return command;
     }
+
+    ComplexCommand* pushOnStack() {
+        return 0;
+    }
 };
 
 #endif
