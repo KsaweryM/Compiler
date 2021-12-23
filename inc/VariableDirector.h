@@ -14,15 +14,17 @@ private:
 
 public:
     Command* declareVariable(std::string name) {
-        variableContainers[name] = new VariableContainer(stack, 1);
+        variableContainers[name] = new VariableContainer(stack, 0, 0);
         stack += 1;
 
         return new INC(VMregister::h);
     }
 
-    Command* declareArray(std::string name, int size) {
-        variableContainers[name] = new VariableContainer(stack, size);
-        stack += size; 
+    Command* declareArray(std::string name, int firstIndex, int lastIndex) {
+        variableContainers[name] = new VariableContainer(stack, firstIndex, lastIndex);
+        int size = lastIndex - firstIndex + 1;
+
+        stack += size;
 
         return new INCN(VMregister::h, size);      
     }

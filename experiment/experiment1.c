@@ -2,7 +2,6 @@
 #include <string>
 #include "../inc/Commands/commands.h"
 #include "../inc/VMregister.h"
-#include "../inc/ParserCommands/commands.h"
 #include "../inc/VariableDirector.h"
 
 int main() {
@@ -17,12 +16,14 @@ int main() {
     command->pushCommandBack(variableDirector->declareVariable("b"));
     command->pushCommandBack(variableDirector->declareVariable("c"));
 
-    command->pushCommandBack(variableDirector->declareArray("ABC", 3));
-
+    
+    command->pushCommandBack(variableDirector->declareArray("ABC", 0, 2));
+    
     command->pushCommandBack(variableDirector->assignVariable("a", 10));
     command->pushCommandBack(variableDirector->assignVariable("b", 20));
     command->pushCommandBack(variableDirector->assignVariable("c", 30));
 
+    
     command->pushCommandBack(variableDirector->assignVariableFromArray("ABC", 0, 100));
     command->pushCommandBack(variableDirector->assignVariableFromArray("ABC", 1, 200));
     command->pushCommandBack(variableDirector->assignVariableFromArray("ABC", 2, 300));
@@ -32,7 +33,7 @@ int main() {
     command->pushCommandBack(variableDirector->assignVariableFromArray("ABC", 0, 1000));
 
     command->pushCommandBack(new DISPLAY_STACK_N(7));
-    //command->pushCommandBack(new DISPLAY_REGISTERS());
+    command->pushCommandBack(new DISPLAY_REGISTERS());
     
     command->pushCommandBack(new HALT());
     command->execute();

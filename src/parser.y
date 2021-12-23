@@ -1,9 +1,10 @@
 %{
     #include <iostream>
-    #include "../inc/Commands/commands.h"
+
     #include "../inc/VMregister.h"
-    #include "../inc/ParserCommands/commands.h"
-    #include "../inc/DataTable.h"
+    #include "../inc/Commands/commands.h"
+    #include "../inc/ParserHelper/commands.h"
+    #include "../inc/VariableDirector.h"
 
     extern int yylex();
     extern int yyparse();
