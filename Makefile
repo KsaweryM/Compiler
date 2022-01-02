@@ -12,8 +12,7 @@ make: clean
 test: 	build/asembler	
 	rm build/asembler
 	cat test/input.txt | ./build/compiler > build/asembler
-	grep "#" test/input.txt
-	#./vm/vm build/asembler
+	./vm/vm build/asembler
 
 exp1:
 	rm -f build/output1.txt build/exp1

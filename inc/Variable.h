@@ -15,6 +15,11 @@ public:
         isInitialized = false;
     }
 
+    ComplexCommand* pushAddressOntoStack() {
+        return new PUSH(address);
+    }
+
+    /*
     ComplexCommand* assign(int value) {
         ComplexCommand* command = new ComplexCommand();
         
@@ -34,7 +39,9 @@ public:
 
         return command;
     }
+    */
 
+   /*
     ComplexCommand* assignByValueFromStack() {
         ComplexCommand* command = new ComplexCommand();
 
@@ -60,10 +67,12 @@ public:
 
         return command;
     }
+    */
 
     ComplexCommand* pushOnStack() {
         ComplexCommand* command = new ComplexCommand();
 
+/*
         command->pushCommandBack(new INC(VMregister::h));
         command->pushCommandBack(new SAVE_REGISTER_ON_STACK(VMregister::a));
         command->pushCommandBack(new SAVE_REGISTER_ON_STACK(VMregister::b));
@@ -77,6 +86,7 @@ public:
 
         command->pushCommandBack(new LOAD_FROM_STACK_TO_REGISTER(VMregister::b));
         command->pushCommandBack(new LOAD_FROM_STACK_TO_REGISTER(VMregister::a));
+        */
 
         return command;
     }

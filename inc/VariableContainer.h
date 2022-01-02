@@ -24,6 +24,11 @@ public:
         }
     }
 
+    ComplexCommand* pushAddressOfVariableOntoStack(int index) {
+        return variables[index - firstIndex]->pushAddressOntoStack();
+    }
+
+    /*
     ComplexCommand* assign(int index, int value) {
         return variables[index - firstIndex]->assign(value);
     }
@@ -35,6 +40,7 @@ public:
     ComplexCommand* pushOnStack(int index) {
         return variables[index - firstIndex]->pushOnStack();
     }
+    */
 
     ~VariableContainer() {
         std::vector<Variable*>::iterator it;

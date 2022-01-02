@@ -1,6 +1,7 @@
 %{
 #include <iostream>
 #include <string>
+#include "../inc/Command.h"
 #include "parser_y.h"
 
 int yylex();

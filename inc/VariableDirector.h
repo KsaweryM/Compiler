@@ -12,6 +12,12 @@ private:
     int stack = 0;
     std::map<std::string, VariableContainer*> variableContainers;
 
+    /*
+        Po zadeklarowaniu wszystkich zmiennych należy zapamiętać wartość stosu. 
+        Wszystkie zmienne, których adres nie przekracza tej wartości stosu, są modyfikowalne.
+        Gdy w pętli for pojawi się iterator (nie może być wcześniej zadeklarowaną zmienną) 
+
+    */
 public:
     Command* declareVariable(std::string name) {
         variableContainers[name] = new VariableContainer(stack, 0, 0);
@@ -29,6 +35,36 @@ public:
         return new INCN(VMregister::h, size);      
     }
 
+    Command* pushAddressOfVariableOntoStack(std::string name) {
+        return variableContainers[name]->pushAddressOfVariableOntoStack(0);
+    }
+
+    Command* pushAddressOfVariableFromArrayOntoStack(std::string name) {
+        return variableContainers[name]->pushAddressOfVariableOntoStack(0);
+    }
+
+    Command* pushAddressOfVariableFromArrayOntoStack(std::string name, int index) {
+        return variableContainers[name]->pushAddressOfVariableOntoStack(index);
+    }
+
+    Command* assign() {
+        ComplexCommand* command = new ComplexCommand();
+        
+        command->pushCommandBack(new SAVE_REGISTER_ON_STACK(VMregister::b));
+        command->pushCommandBack(new SAVE_REGISTER_ON_STACK(VMregister::a));
+        command->pushCommandBack(new DECN(VMregister::h, 2));
+        command->pushCommandBack(new LOAD_FROM_STACK_TO_REGISTER(VMregister::a));
+        command->pushCommandBack(new LOAD_FROM_STACK_TO_REGISTER(VMregister::b));
+        command->pushCommandBack(new STORE(VMregister::b));
+        command->pushCommandBack(new INCN(VMregister::h, 4));
+        command->pushCommandBack(new LOAD_FROM_STACK_TO_REGISTER(VMregister::b));
+        command->pushCommandBack(new LOAD_FROM_STACK_TO_REGISTER(VMregister::a));
+        command->pushCommandBack(new DECN(VMregister::h, 2));
+
+        return command;
+    }
+
+    /*
     Command* assignVariable(std::string name, int value) {
         return variableContainers[name]->assign(0, value);
     }
@@ -53,6 +89,8 @@ public:
     Command* pushVariableFromArrayOntoStack(std::string name, int index) {
         return variableContainers[name]->pushOnStack(index);
     }
+
+    */
 
     ~VariableDirector() {
         std::map<std::string, VariableContainer*>::iterator it;
