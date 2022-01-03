@@ -1,6 +1,11 @@
 VAR
-T[-1:2], index
+T[-1:2], index, a, b, c, d, e, f, g, h, i, j
 BEGIN
-index ASSIGN 1;
-T[index] ASSIGN -5;
+index ASSIGN -1;
+a ASSIGN 20;
+T[index] ASSIGN index;
+d ASSIGN 10;
+e ASSIGN 1;
+T[e] ASSIGN e;
+e ASSIGN 2;
 END

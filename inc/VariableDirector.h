@@ -1,7 +1,7 @@
 #ifndef VARIABLE_DIRECTOR_H
 #define VARIABLE_DIRECTOR_H
 
-#define VARIABLE_DIRECTOR_DEBUG 1
+#define VARIABLE_DIRECTOR_DEBUG 0
 
 #include <string>
 #include <map>
@@ -59,7 +59,6 @@ public:
             throw std::invalid_argument(text);
         }
 
-        std::cerr << "indeks pobierany jest ze stosu" << std::endl;
         return variableContainers[name]->getIndexFromStackAndPushAddressOfVariableOntoStack();
     }
 
@@ -70,6 +69,22 @@ public:
         }
 
         return variableContainers[name]->pushAddressOfVariableOntoStack(index);
+    }
+
+    Command* pushVariableOntoStackByAddressOfVariableFromStack() {
+        ComplexCommand* command = new ComplexCommand();
+
+        command->pushCommandBack(new SAVE_REGISTER_ON_STACK(VMregister::b));
+        command->pushCommandBack(new SAVE_REGISTER_ON_STACK(VMregister::a));
+        command->pushCommandBack(new DECN(VMregister::h, 2));
+        command->pushCommandBack(new LOAD_FROM_STACK_TO_REGISTER(VMregister::b));
+        command->pushCommandBack(new LOAD(VMregister::b));
+        command->pushCommandBack(new SAVE_REGISTER_ON_STACK(VMregister::a));
+        command->pushCommandBack(new INCN(VMregister::h, 2));
+        command->pushCommandBack(new LOAD_FROM_STACK_TO_REGISTER(VMregister::a));
+        command->pushCommandBack(new LOAD_FROM_STACK_TO_REGISTER(VMregister::b));
+
+        return command;
     }
 
     Command* assign() {
