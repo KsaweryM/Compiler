@@ -10,7 +10,7 @@
 
     VariableDirector* variableDirector;
 
-    #define PARSER_DEBUG 1
+    #define PARSER_DEBUG 0
 %}
 
 %union
@@ -70,12 +70,9 @@ value:            num { ComplexCommand* complexCommand = new ComplexCommand(); c
 
 identifier:       pidentifier { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack(variableDirector->pushAddressOfVariableOntoStack(std::string($1))); $$ = complexCommand;  }
                 | pidentifier TOKEN_LEFT_SQUARE_BRACKET num TOKEN_RIGHT_SQUARE_BRACKET { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack(variableDirector->pushAddressOfVariableFromArrayOntoStack(std::string($1), $3)); $$ = complexCommand;  }
-%%
-
-/*
-                | pidentifier TOKEN_LEFT_SQUARE_BRACKET pidentifier TOKEN_RIGHT_SQUARE_BRACKET  { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack(variableDirector->pushVariableOntoStack($3));  $$ = complexCommand; }
+                | pidentifier TOKEN_LEFT_SQUARE_BRACKET pidentifier TOKEN_RIGHT_SQUARE_BRACKET  { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack(variableDirector->pushAddressOfVariableOntoStack(std::string($3))); complexCommand->pushCommandBack(variableDirector->getIndexFromStackAndPushAddressOfVariableFromArrayOntoStack($1)); $$ = complexCommand; }
                 
-%%*/
+%%
 
 int yyerror(std::string error) {	
     std::cout << error << std::endl;

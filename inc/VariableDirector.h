@@ -1,9 +1,11 @@
 #ifndef VARIABLE_DIRECTOR_H
 #define VARIABLE_DIRECTOR_H
 
+#define VARIABLE_DIRECTOR_DEBUG 1
+
 #include <string>
 #include <map>
-
+#include <stdexcept>
 #include "VariableContainer.h"
 #include "ComplexCommand.h"
 
@@ -22,7 +24,9 @@ private:
     */
 public:
     Command* declareVariable(std::string name) {
-        std::cerr << "Zarządca zmiennych stworzył zmienną \"" << name  << "\"" << std::endl; 
+        if (VARIABLE_DIRECTOR_DEBUG)
+            std::cerr << "Zarządca zmiennych stworzył zmienną \"" << name  << "\"" << std::endl; 
+
         variableContainers[name] = new VariableContainer(stack, 0, 0);
         stack += 1;
 
@@ -30,7 +34,8 @@ public:
     }
 
     Command* declareArray(std::string name, int firstIndex, int lastIndex) {
-        std::cerr << "Zarządca zmiennych stworzył tablice \"" << name << "\"" << std::endl;
+        if (VARIABLE_DIRECTOR_DEBUG)
+            std::cerr << "Zarządca zmiennych stworzył tablice \"" << name << "\"" << std::endl;
         variableContainers[name] = new VariableContainer(stack, firstIndex, lastIndex);
         int size = lastIndex - firstIndex + 1;
 
@@ -41,17 +46,29 @@ public:
 
     Command* pushAddressOfVariableOntoStack(std::string name) {
         if (variableContainers.count(name) == 0) {
-            std::cerr << "ZMIENNA " << name << " NIE ISTNIEJE" << std::endl;
+            std::string text = "zmienna \"" + name + "\" nie istnieje!";
+            throw std::invalid_argument(text);
         }
 
         return variableContainers[name]->pushAddressOfVariableOntoStack(0);
     }
 
-    Command* pushAddressOfVariableFromArrayOntoStack(std::string name) {
-        return variableContainers[name]->pushAddressOfVariableOntoStack(0);
+    Command* getIndexFromStackAndPushAddressOfVariableFromArrayOntoStack(std::string name) {
+        if (variableContainers.count(name) == 0) {
+            std::string text = "tablica \"" + name + "\" nie istnieje!";
+            throw std::invalid_argument(text);
+        }
+
+        std::cerr << "indeks pobierany jest ze stosu" << std::endl;
+        return variableContainers[name]->getIndexFromStackAndPushAddressOfVariableOntoStack();
     }
 
     Command* pushAddressOfVariableFromArrayOntoStack(std::string name, int index) {
+        if (variableContainers.count(name) == 0) {
+            std::string text = "tablica \"" + name + "\" nie istnieje!";
+            throw std::invalid_argument(text);
+        }
+
         return variableContainers[name]->pushAddressOfVariableOntoStack(index);
     }
 

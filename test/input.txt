@@ -1,10 +1,6 @@
 VAR
-xd[-1:2], a, b
+T[-1:2], index
 BEGIN
-xd[-1] ASSIGN -5;
-xd[0] ASSIGN 10;
-xd[1] ASSIGN 11;
-xd[2] ASSIGN 12;
-a ASSIGN 20;
-b ASSIGN 30;
+index ASSIGN 1;
+T[index] ASSIGN -5;
 END
