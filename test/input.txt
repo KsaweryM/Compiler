@@ -1,4 +1,8 @@
 VAR
-maslo
+xd[-1:5], a
 BEGIN
+xd[1] ASSIGN 20;
+xd[5] ASSIGN 100;
+a ASSIGN 100000;
+
 END

@@ -33,7 +33,9 @@ public:
 		std::deque<Command*>::iterator it;
 
 		for (it = instructions.begin(); it != instructions.end(); it++) {
-			(*it)->execute();
+			if (*it != 0) {
+				(*it)->execute();
+			}
 		}
 	}
 
@@ -41,7 +43,9 @@ public:
 		std::deque<Command*>::iterator it;
 
 		for (it = instructions.begin(); it != instructions.end(); it++) {
-			delete* it;
+			if (*it != 0) {
+				delete* it;
+			}
 		}
 	}
 };

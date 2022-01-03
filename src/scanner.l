@@ -21,8 +21,8 @@ int yylex();
 ";"      { return TOKEN_SEMICOLON; }
 ":"      { return TOKEN_COLON; }
 ","      { return TOKEN_COMMA; }
-[A-Za-z][A-Za-z0-9]* { return pidentifier; }
-[0-9]+  { return num; }
+[A-Za-z][A-Za-z0-9]* { yylval.text = strdup(yytext); return pidentifier; }
+[0-9]+  {yylval.number = atoi(yytext);  return num; }
 .       { return TOKEN_ERROR;                              }
 
 

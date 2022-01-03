@@ -7,6 +7,8 @@
 #include "VariableContainer.h"
 #include "ComplexCommand.h"
 
+#include <iostream>
+
 class VariableDirector {
 private:
     int stack = 0;
@@ -20,6 +22,7 @@ private:
     */
 public:
     Command* declareVariable(std::string name) {
+        std::cerr << "Zarządca zmiennych stworzył zmienną \"" << name  << "\"" << std::endl; 
         variableContainers[name] = new VariableContainer(stack, 0, 0);
         stack += 1;
 
@@ -27,6 +30,7 @@ public:
     }
 
     Command* declareArray(std::string name, int firstIndex, int lastIndex) {
+        std::cerr << "Zarządca zmiennych stworzył tablice \"" << name << "\"" << std::endl;
         variableContainers[name] = new VariableContainer(stack, firstIndex, lastIndex);
         int size = lastIndex - firstIndex + 1;
 
@@ -36,6 +40,10 @@ public:
     }
 
     Command* pushAddressOfVariableOntoStack(std::string name) {
+        if (variableContainers.count(name) == 0) {
+            std::cerr << "ZMIENNA " << name << " NIE ISTNIEJE" << std::endl;
+        }
+
         return variableContainers[name]->pushAddressOfVariableOntoStack(0);
     }
 
