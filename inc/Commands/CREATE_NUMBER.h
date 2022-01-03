@@ -28,7 +28,16 @@ private:
 
 public:
     CREATE_NUMBER(int n) {
-        createNumber(n);
+        if (n >= 0) {
+            createNumber(n);
+        }
+        else {
+            createNumber(-n);
+            pushCommandBack(new RESET(VMregister::b));
+            pushCommandBack(new SWAP(VMregister::b));
+            pushCommandBack(new SUB(VMregister::b));
+        }
+
     }
 };
 
