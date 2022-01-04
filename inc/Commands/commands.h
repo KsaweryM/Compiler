@@ -35,5 +35,13 @@
 #include "DISPLAY_REGISTERS.h"
 #include "RESET_REAGISTERS.h"
 #include "CREATE_TEST_REGISTERS.h"
-
+#include "EQ_CONDITION.h"
+#include "NEQ_CONDITION.h"
+#include "LE_CONDITION.h"
+#include "GE_CONDITION.h"
+#include "LEQ_CONDITION.h"
+#include "GEQ_CONDITION.h"
+#include "IF.h"
+#include "WRITE.h"
+#include "READ.h"
 #endif

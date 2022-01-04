@@ -1,7 +1,7 @@
 #ifndef VARIABLE_DIRECTOR_H
 #define VARIABLE_DIRECTOR_H
 
-#define VARIABLE_DIRECTOR_DEBUG 0
+#define VARIABLE_DIRECTOR_DEBUG 1
 
 #include <string>
 #include <map>
@@ -45,6 +45,9 @@ public:
     }
 
     Command* pushAddressOfVariableOntoStack(std::string name) {
+    if (VARIABLE_DIRECTOR_DEBUG)
+            std::cerr << "Zarządca zmiennych ustawia adres zmiennej \"" << name << "\" na stos" << std::endl;
+
         if (variableContainers.count(name) == 0) {
             std::string text = "zmienna \"" + name + "\" nie istnieje!";
             throw std::invalid_argument(text);
@@ -54,6 +57,9 @@ public:
     }
 
     Command* getIndexFromStackAndPushAddressOfVariableFromArrayOntoStack(std::string name) {
+    if (VARIABLE_DIRECTOR_DEBUG)
+            std::cerr << "Zarządca zmiennych pobiera indeks ze stosu i ustawia adres zmiennej z tablicy o nazwie \"" << name << "\" na stos" << std::endl;
+
         if (variableContainers.count(name) == 0) {
             std::string text = "tablica \"" + name + "\" nie istnieje!";
             throw std::invalid_argument(text);
@@ -63,6 +69,9 @@ public:
     }
 
     Command* pushAddressOfVariableFromArrayOntoStack(std::string name, int index) {
+        if (VARIABLE_DIRECTOR_DEBUG)
+            std::cerr << "Zarządca zmiennych z indeksem w kodzie ustawia adres zmiennej \"" << name << "\" na stos" << std::endl;
+
         if (variableContainers.count(name) == 0) {
             std::string text = "tablica \"" + name + "\" nie istnieje!";
             throw std::invalid_argument(text);

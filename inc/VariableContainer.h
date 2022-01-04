@@ -28,6 +28,11 @@ public:
     }
 
     ComplexCommand* pushAddressOfVariableOntoStack(int index) {
+        if (index < firstIndex || index > lastIndex) {
+            std::cerr << "index = " << index << " firstIndex = " << firstIndex << " lastIndex = " << lastIndex << std::endl;
+            throw std::invalid_argument("Niepoprawny indeks");
+        }
+
         return variables[index - firstIndex]->pushAddressOntoStack();
     }
 

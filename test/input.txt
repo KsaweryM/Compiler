@@ -1,8 +1,8 @@
 VAR
-a, b, c, d, e, f, g
+aaa, DD[11:101], a
 BEGIN
-a ASSIGN 100;
-b ASSIGN 200;
-c ASSIGN a - b;
-a ASSIGN 10 - b;
+a ASSIGN 11;
+DD[a] ASSIGN a + a;
+WRITE a;
+WRITE DD[a];
 END

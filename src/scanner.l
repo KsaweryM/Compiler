@@ -22,6 +22,14 @@ int yylex();
 ";"      {  if (SCANNER_DEBUG) std::cerr << "Rozpoznałem ;" << std::endl;  return TOKEN_SEMICOLON; }
 ":"      {   if (SCANNER_DEBUG) std::cerr << "Rozpoznałem :" << std::endl;  return TOKEN_COLON; }
 ","      {  if (SCANNER_DEBUG) std::cerr << "Rozpoznałem ," << std::endl;  return TOKEN_COMMA; }
+"EQ"     { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem EQ" << std::endl; return EQ_TOKEN; }
+"NEQ"   { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem EQ" << std::endl; return NEQ_TOKEN; }
+"LE"    { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem EQ" << std::endl; return LE_TOKEN; }
+"GE"    { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem EQ" << std::endl; return GE_TOKEN; }
+"LEQ"   { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem EQ" << std::endl; return LEQ_TOKEN; }
+"GEQ"   { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem EQ" << std::endl; return GEQ_TOKEN; }
+"READ"  { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem READ" << std::endl; return TOKEN_READ; }
+"WRITE" { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem WRITE" << std::endl; return TOKEN_WRITE; }
 [A-Za-z][A-Za-z0-9]* {  if (SCANNER_DEBUG) std::cerr << "Rozpoznałem zmienną" << std::endl;  yylval.text = strdup(yytext); return pidentifier; }
 -?[0-9]+  { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem liczbę" << std::endl;  yylval.number = atoi(yytext);  return num; }
 .       {  if (SCANNER_DEBUG) std::cerr << "Nie rozpoznałem tego symbolu " << " - " << int(*yytext) << std::endl;  return TOKEN_ERROR;                              }

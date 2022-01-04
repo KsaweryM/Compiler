@@ -11,7 +11,7 @@
     VariableDirector* variableDirector;
 
     #define PARSER_DEBUG 0
-    #define DISPLAY_STACK_END 1
+    #define DISPLAY_STACK_END 0 
 %}
 
 %union
@@ -34,6 +34,16 @@
 %token <number> TOKEN_COMMA
 %token <number> TOKEN_ERROR
 
+%token <number> EQ_TOKEN
+%token <number> NEQ_TOKEN
+%token <number> LE_TOKEN
+%token <number> GE_TOKEN
+%token <number> LEQ_TOKEN
+%token <number> GEQ_TOKEN
+
+%token <number> TOKEN_WRITE
+%token <number> TOKEN_READ
+
 %token <text> pidentifier
 %token <number> num
 
@@ -44,6 +54,7 @@
 %type <com> command
 %type <com> identifier
 %type <com> expression
+%type <com> condition
 %type <com> value
 %%
 input: program
@@ -61,10 +72,19 @@ commands:         commands command { if(PARSER_DEBUG) std::cerr << "Tworzę cią
                 | command { if(PARSER_DEBUG) std::cerr << "Tworzę pojedyńczą komende" << std::endl; $$ = $1; }
 
 command:          identifier ASSIGN expression TOKEN_SEMICOLON {if(PARSER_DEBUG)  std::cerr << "Przpisuje wartość zmiennej" << std::endl; ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack($3); complexCommand->pushCommandBack(variableDirector->assign());  $$ = complexCommand; }
+                | TOKEN_WRITE value TOKEN_SEMICOLON { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($2); complexCommand->pushCommandBack(new WRITE()); $$ = complexCommand; }
+                | TOKEN_READ identifier TOKEN_SEMICOLON { $$ = 0; }
 
 expression:       value
                 | value TOKEN_PLUS value { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack($3); complexCommand->pushCommandBack(new ADD_TWO_NUMBERS_FROM_STACK_AND_PUSH_RESULT_ON_STACK()); $$ = complexCommand; }
                 | value TOKEN_MINUS value { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack($3); complexCommand->pushCommandBack(new SUBTRACT_TWO_NUMBERS_FROM_STACK_AND_PUSH_RESULT_ON_STACK()); $$ = complexCommand; }
+                
+condition:        value EQ_TOKEN value { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack($3); complexCommand->pushCommandBack(new EQ_CONDITION()); complexCommand->pushCommandBack(new DISPLAY_STACK_N(10)); $$ = complexCommand; }
+                | value NEQ_TOKEN value { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack(new EQ_CONDITION()); $$ = complexCommand; }
+                | value LE_TOKEN value { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack(new EQ_CONDITION()); $$ = complexCommand; }
+                | value GE_TOKEN value { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack(new EQ_CONDITION()); $$ = complexCommand; }
+                | value LEQ_TOKEN value { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack(new EQ_CONDITION()); $$ = complexCommand; }
+                | value GEQ_TOKEN value { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack(new EQ_CONDITION()); $$ = complexCommand; }
 
 value:            num { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack(new PUSH($1)); $$ = complexCommand; }
                 | identifier { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack(variableDirector->pushVariableOntoStackByAddressOfVariableFromStack());  $$ = complexCommand; } 

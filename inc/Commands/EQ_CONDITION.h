@@ -10,18 +10,32 @@ public:
       pushCommandBack(new SAVE_REGISTER_ON_STACK(VMregister::a));
       pushCommandBack(new SAVE_REGISTER_ON_STACK(VMregister::b));
 
-      pushCommandBack(new DECN(VMregister::h, 2));
+      pushCommandBack(new SAVE_REGISTER_ON_STACK(VMregister::c));
+      pushCommandBack(new SAVE_REGISTER_ON_STACK(VMregister::d));
+      
+      pushCommandBack(new PUSH(0));
+      pushCommandBack(new PUSH(1));
 
-      pushCommandBack(new LOAD_FROM_STACK_TO_REGISTER(VMregister::a));
+      // c = 1
+      pushCommandBack(new LOAD_FROM_STACK_TO_REGISTER(VMregister::c));
+      // d = 0
+      pushCommandBack(new LOAD_FROM_STACK_TO_REGISTER(VMregister::d));
+
+      pushCommandBack(new DECN(VMregister::h, 4));
+
       pushCommandBack(new LOAD_FROM_STACK_TO_REGISTER(VMregister::b));
+      pushCommandBack(new LOAD_FROM_STACK_TO_REGISTER(VMregister::a));
 
       pushCommandBack(new SUB(VMregister::b));
 
-      pushCommandBack(new INC(VMregister::h));
-      pushCommandBack(new STORE(VMregister::h));
+      pushCommandBack(new JZERO(3));
+      pushCommandBack(new SAVE_REGISTER_ON_STACK(VMregister::d)); // x != y
+      pushCommandBack(new JUMP(2));
+      pushCommandBack(new SAVE_REGISTER_ON_STACK(VMregister::c)); // x == y
+      pushCommandBack(new INCN(VMregister::h, 5));
 
-      pushCommandBack(new INCN(VMregister::h, 3));
-
+      pushCommandBack(new LOAD_FROM_STACK_TO_REGISTER(VMregister::d));
+      pushCommandBack(new LOAD_FROM_STACK_TO_REGISTER(VMregister::c));
       pushCommandBack(new LOAD_FROM_STACK_TO_REGISTER(VMregister::b));
       pushCommandBack(new LOAD_FROM_STACK_TO_REGISTER(VMregister::a));
 
