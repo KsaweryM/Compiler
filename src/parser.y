@@ -4,6 +4,7 @@
     #include "../inc/ComplexCommand.h"
     #include "../inc/VariableDirector.h"
     #include "../inc/Commands/commands.h"
+
     extern int yylex();
     extern int yyparse();
     int yyerror(std::string);
@@ -11,7 +12,7 @@
     VariableDirector* variableDirector;
 
     #define PARSER_DEBUG 0
-    #define DISPLAY_STACK_END 0 
+    #define DISPLAY_STACK_END 1
 %}
 
 %union
@@ -66,14 +67,13 @@ declarations:     declarations TOKEN_COMMA pidentifier { if(PARSER_DEBUG) std::c
                 | declarations TOKEN_COMMA pidentifier TOKEN_LEFT_SQUARE_BRACKET num TOKEN_COLON num TOKEN_RIGHT_SQUARE_BRACKET {if(PARSER_DEBUG) std::cerr << "Zrobiłem deklaracje, teraz robię tablice" << std::endl;  ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack(variableDirector->declareArray(std::string($3), $5, $7)); $$ = complexCommand; }
                 | pidentifier  {if(PARSER_DEBUG)  std::cerr << "Robię zmienną" << std::endl; ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack(variableDirector->declareVariable(std::string($1))); $$ = complexCommand; }
                 | pidentifier TOKEN_LEFT_SQUARE_BRACKET num TOKEN_COLON num TOKEN_RIGHT_SQUARE_BRACKET {if(PARSER_DEBUG) std::cerr << "Robię tablice" << std::endl; $$ = 0; ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack(variableDirector->declareArray($1, $3, $5)); $$ = complexCommand; }
-                | num { }
 
 commands:         commands command { if(PARSER_DEBUG) std::cerr << "Tworzę ciąg komend" << std::endl; ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack($2); $$ = complexCommand; }
                 | command { if(PARSER_DEBUG) std::cerr << "Tworzę pojedyńczą komende" << std::endl; $$ = $1; }
 
 command:          identifier ASSIGN expression TOKEN_SEMICOLON {if(PARSER_DEBUG)  std::cerr << "Przpisuje wartość zmiennej" << std::endl; ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack($3); complexCommand->pushCommandBack(variableDirector->assign());  $$ = complexCommand; }
                 | TOKEN_WRITE value TOKEN_SEMICOLON { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($2); complexCommand->pushCommandBack(new WRITE()); $$ = complexCommand; }
-                | TOKEN_READ identifier TOKEN_SEMICOLON { $$ = 0; }
+                | TOKEN_READ identifier TOKEN_SEMICOLON { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($2); complexCommand->pushCommandBack(new READ()); $$ = complexCommand;}
 
 expression:       value
                 | value TOKEN_PLUS value { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack($3); complexCommand->pushCommandBack(new ADD_TWO_NUMBERS_FROM_STACK_AND_PUSH_RESULT_ON_STACK()); $$ = complexCommand; }

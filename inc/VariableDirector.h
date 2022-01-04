@@ -1,7 +1,7 @@
 #ifndef VARIABLE_DIRECTOR_H
 #define VARIABLE_DIRECTOR_H
 
-#define VARIABLE_DIRECTOR_DEBUG 1
+#define VARIABLE_DIRECTOR_DEBUG 0
 
 #include <string>
 #include <map>

@@ -1,8 +1,12 @@
 VAR
-aaa, DD[11:101], a
+indexA, indexB, T[0:2], G[-1:1], value, total
 BEGIN
-a ASSIGN 11;
-DD[a] ASSIGN a + a;
-WRITE a;
-WRITE DD[a];
+READ indexA;
+READ value;
+T[indexA] ASSIGN value;
+READ indexB;
+READ value;
+T[indexB] ASSIGN value;
+total ASSIGN T[indexA] + T[indexB];
+WRITE total;
 END
