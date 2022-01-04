@@ -12,7 +12,7 @@
     VariableDirector* variableDirector;
 
     #define PARSER_DEBUG 0
-    #define DISPLAY_STACK_END 1
+    #define DISPLAY_STACK_END 0
 %}
 
 %union
@@ -60,7 +60,7 @@
 %%
 input: program
 
-program:          TOKEN_VAR declarations TOKEN_BEGIN commands TOKEN_END  {if(PARSER_DEBUG) std::cerr << "Tworzę program" << std::endl; ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack(new RESET_STACK()); complexCommand->pushCommandBack($2); complexCommand->pushCommandBack($4); if (DISPLAY_STACK_END) complexCommand->pushCommandBack(new DISPLAY_STACK_N(10));  complexCommand->pushCommandBack(new HALT());   complexCommand->execute(); $$ = complexCommand; }
+program:          TOKEN_VAR declarations TOKEN_BEGIN commands TOKEN_END  {if(PARSER_DEBUG) std::cerr << "Tworzę program" << std::endl; ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack(new RESET_STACK()); complexCommand->pushCommandBack($2); complexCommand->pushCommandBack($4); /*if (DISPLAY_STACK_END) complexCommand->pushCommandBack(new DISPLAY_STACK_N(10));*/  complexCommand->pushCommandBack(new HALT());   complexCommand->execute(); $$ = complexCommand; }
                 | TOKEN_BEGIN commands TOKEN_END { $$ = $2; }
 
 declarations:     declarations TOKEN_COMMA pidentifier { if(PARSER_DEBUG) std::cerr << "Zrobiłem deklaracje, teraz robię zmienną" << std::endl;  ComplexCommand* complexCommand = new ComplexCommand();  complexCommand->pushCommandBack($1);  complexCommand->pushCommandBack(variableDirector->declareVariable(std::string($3)));   $$ = complexCommand;   } // { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack(variableDirector->declareVariable($3)); $$ = complexCommand; }
@@ -78,8 +78,9 @@ command:          identifier ASSIGN expression TOKEN_SEMICOLON {if(PARSER_DEBUG)
 expression:       value
                 | value TOKEN_PLUS value { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack($3); complexCommand->pushCommandBack(new ADD_TWO_NUMBERS_FROM_STACK_AND_PUSH_RESULT_ON_STACK()); $$ = complexCommand; }
                 | value TOKEN_MINUS value { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack($3); complexCommand->pushCommandBack(new SUBTRACT_TWO_NUMBERS_FROM_STACK_AND_PUSH_RESULT_ON_STACK()); $$ = complexCommand; }
-                
-condition:        value EQ_TOKEN value { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack($3); complexCommand->pushCommandBack(new EQ_CONDITION()); complexCommand->pushCommandBack(new DISPLAY_STACK_N(10)); $$ = complexCommand; }
+                | condition
+
+condition:        value EQ_TOKEN value { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack($3); complexCommand->pushCommandBack(new EQ_CONDITION()); $$ = complexCommand; }
                 | value NEQ_TOKEN value { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack(new EQ_CONDITION()); $$ = complexCommand; }
                 | value LE_TOKEN value { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack(new EQ_CONDITION()); $$ = complexCommand; }
                 | value GE_TOKEN value { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack(new EQ_CONDITION()); $$ = complexCommand; }

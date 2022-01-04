@@ -1,12 +1,9 @@
 VAR
-indexA, indexB, T[0:2], G[-1:1], value, total
+a, b, c
 BEGIN
-READ indexA;
-READ value;
-T[indexA] ASSIGN value;
-READ indexB;
-READ value;
-T[indexB] ASSIGN value;
-total ASSIGN T[indexA] + T[indexB];
-WRITE total;
+READ a;
+READ b;
+c ASSIGN 111;
+b ASSIGN a EQ b;
+WRITE b;
 END
