@@ -45,7 +45,7 @@ public:
     }
 
     Command* pushAddressOfVariableOntoStack(std::string name) {
-    if (VARIABLE_DIRECTOR_DEBUG)
+        if (VARIABLE_DIRECTOR_DEBUG)
             std::cerr << "Zarządca zmiennych ustawia adres zmiennej \"" << name << "\" na stos" << std::endl;
 
         if (variableContainers.count(name) == 0) {

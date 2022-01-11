@@ -22,6 +22,11 @@
     Command* com;
 }
 
+%token <number> TOKEN_IF
+%token <number> TOKEN_THEN
+%token <number> TOKEN_ELSE
+%token <number> TOKEN_ENDIF
+
 %token <number> TOKEN_VAR
 %token <number> TOKEN_BEGIN
 %token <number> TOKEN_END
@@ -60,7 +65,7 @@
 %%
 input: program
 
-program:          TOKEN_VAR declarations TOKEN_BEGIN commands TOKEN_END  {if(PARSER_DEBUG) std::cerr << "Tworzę program" << std::endl; ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack(new RESET_STACK()); complexCommand->pushCommandBack($2); complexCommand->pushCommandBack($4); /*if (DISPLAY_STACK_END) complexCommand->pushCommandBack(new DISPLAY_STACK_N(10));*/  complexCommand->pushCommandBack(new HALT());   complexCommand->execute(); $$ = complexCommand; }
+program:          TOKEN_VAR declarations TOKEN_BEGIN commands TOKEN_END  {if(PARSER_DEBUG) std::cerr << "Tworzę program" << std::endl; ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack(new RESET_STACK()); complexCommand->pushCommandBack($2); complexCommand->pushCommandBack($4); if (DISPLAY_STACK_END) complexCommand->pushCommandBack(new DISPLAY_STACK_N(10));  complexCommand->pushCommandBack(new HALT());   complexCommand->execute(); $$ = complexCommand; }
                 | TOKEN_BEGIN commands TOKEN_END { $$ = $2; }
 
 declarations:     declarations TOKEN_COMMA pidentifier { if(PARSER_DEBUG) std::cerr << "Zrobiłem deklaracje, teraz robię zmienną" << std::endl;  ComplexCommand* complexCommand = new ComplexCommand();  complexCommand->pushCommandBack($1);  complexCommand->pushCommandBack(variableDirector->declareVariable(std::string($3)));   $$ = complexCommand;   } // { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack(variableDirector->declareVariable($3)); $$ = complexCommand; }
@@ -74,6 +79,7 @@ commands:         commands command { if(PARSER_DEBUG) std::cerr << "Tworzę cią
 command:          identifier ASSIGN expression TOKEN_SEMICOLON {if(PARSER_DEBUG)  std::cerr << "Przpisuje wartość zmiennej" << std::endl; ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack($3); complexCommand->pushCommandBack(variableDirector->assign());  $$ = complexCommand; }
                 | TOKEN_WRITE value TOKEN_SEMICOLON { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($2); complexCommand->pushCommandBack(new WRITE()); $$ = complexCommand; }
                 | TOKEN_READ identifier TOKEN_SEMICOLON { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($2); complexCommand->pushCommandBack(new READ()); $$ = complexCommand;}
+                | TOKEN_IF condition TOKEN_THEN commands TOKEN_ELSE commands TOKEN_ENDIF { IF* ifCommand = new IF($2, $4, $6);  $$ = ifCommand; }
 
 expression:       value
                 | value TOKEN_PLUS value { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack($3); complexCommand->pushCommandBack(new ADD_TWO_NUMBERS_FROM_STACK_AND_PUSH_RESULT_ON_STACK()); $$ = complexCommand; }

@@ -1,9 +1,17 @@
 VAR
-a, b, c
+tablica[10:20], indeks, wartosc
 BEGIN
-READ a;
-READ b;
-c ASSIGN 111;
-b ASSIGN a EQ b;
-WRITE b;
+    READ indeks;
+    READ wartosc;
+    tablica[indeks] ASSIGN wartosc;
+    
+    IF tablica[indeks] EQ 1 THEN
+        WRITE 1;
+    ELSE
+        IF tablica[indeks] EQ -1 THEN
+            WRITE -1;
+        ELSE
+            WRITE 0;
+        ENDIF
+    ENDIF
 END
