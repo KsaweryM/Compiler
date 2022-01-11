@@ -34,6 +34,16 @@ int yylex();
 "THEN"  { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem THEN" << std::endl; return TOKEN_THEN; }
 "ELSE" { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem ELSE" << std::endl; return TOKEN_ELSE; }
 "ENDIF" { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem ENDIF" << std::endl; return TOKEN_ENDIF; }
+"WHILE" { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem WHILE" << std::endl; return TOKEN_WHILE; }
+"DO" { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem DO" << std::endl; return TOKEN_DO; }
+"ENDWHILE" { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem END_WHILE" << std::endl; return TOKEN_END_WHILE; }
+"REPEAT" { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem REPEAT" << std::endl; return TOKEN_REPEAT; }
+"UNTIL" { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem UNTIL" << std::endl; return TOKEN_UNTIL; }
+"FOR" { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem FOR" << std::endl; return TOKEN_FOR; }
+"FROM" { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem FROM" << std::endl; return TOKEN_FROM; }
+"TO" { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem TO" << std::endl; return TOKEN_TO; }
+"DO" { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem DO" << std::endl; return TOKEN_DO; }
+"ENDFOR" { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem ENDFOR" << std::endl; return TOKEN_ENDFOR; }
 [A-Za-z][A-Za-z0-9]* {  if (SCANNER_DEBUG) std::cerr << "Rozpoznałem zmienną" << std::endl;  yylval.text = strdup(yytext); return pidentifier; }
 -?[0-9]+  { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem liczbę" << std::endl;  yylval.number = atoi(yytext);  return num; }
 .       {  if (SCANNER_DEBUG) std::cerr << "Nie rozpoznałem tego symbolu " << " - " << int(*yytext) << std::endl;  return TOKEN_ERROR;                              }

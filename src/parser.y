@@ -50,6 +50,17 @@
 %token <number> TOKEN_WRITE
 %token <number> TOKEN_READ
 
+%token <number> TOKEN_WHILE
+%token <number> TOKEN_DO
+%token <number> TOKEN_END_WHILE
+
+%token <number> TOKEN_REPEAT
+%token <number> TOKEN_UNTIL
+%token <number> TOKEN_FOR
+%token <number> TOKEN_FROM
+%token <number> TOKEN_TO
+%token <number> TOKEN_ENDFOR
+
 %token <text> pidentifier
 %token <number> num
 
@@ -81,6 +92,7 @@ command:          identifier ASSIGN expression TOKEN_SEMICOLON {if(PARSER_DEBUG)
                 | TOKEN_READ identifier TOKEN_SEMICOLON { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($2); complexCommand->pushCommandBack(new READ()); $$ = complexCommand;}
                 | TOKEN_IF condition TOKEN_THEN commands TOKEN_ELSE commands TOKEN_ENDIF { IF* ifCommand = new IF($2, $4, $6);  $$ = ifCommand; }
                 | TOKEN_IF condition TOKEN_THEN commands TOKEN_ENDIF { IF_THEN* ifCommand = new IF_THEN($2, $4);  $$ = ifCommand; }
+                | TOKEN_WHILE condition TOKEN_DO commands TOKEN_END_WHILE {WHILE* WHILE_COMMAND = new WHILE($2, $4); $$ = WHILE_COMMAND; }
 
 expression:       value
                 | value TOKEN_PLUS value { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack($3); complexCommand->pushCommandBack(new ADD_TWO_NUMBERS_FROM_STACK_AND_PUSH_RESULT_ON_STACK()); $$ = complexCommand; }
