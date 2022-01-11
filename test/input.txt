@@ -1,19 +1,16 @@
 VAR
-A, yes, no, xd[1:5]
+A, B, yes, no
 BEGIN
-    A ASSIGN -777;
-    xd[1] ASSIGN -111;
-    xd[2] ASSIGN -222;
-    xd[3] ASSIGN -333;
-    xd[4] ASSIGN -444;
-    xd[5] ASSIGN -555;
 
     yes ASSIGN 1;
-    no ASSIGN -999;
+    no ASSIGN 0;
 
-    READ A;
-    WHILE A EQ 1 DO
+    REPEAT
         WRITE yes;
-    ENDWHILE
-        A ASSIGN -777;
+        READ A;
+        READ B;
+    UNTIL A EQ B;
+    WRITE no;   
+
+    
 END

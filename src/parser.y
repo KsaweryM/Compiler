@@ -90,10 +90,10 @@ commands:         commands command { if(PARSER_DEBUG) std::cerr << "Tworzę cią
 command:          identifier ASSIGN expression TOKEN_SEMICOLON {if(PARSER_DEBUG)  std::cerr << "Przpisuje wartość zmiennej" << std::endl; ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack($3); complexCommand->pushCommandBack(variableDirector->assign());  $$ = complexCommand; }
                 | TOKEN_WRITE value TOKEN_SEMICOLON { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($2); complexCommand->pushCommandBack(new WRITE()); $$ = complexCommand; }
                 | TOKEN_READ identifier TOKEN_SEMICOLON { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($2); complexCommand->pushCommandBack(new READ()); $$ = complexCommand;}
-                | TOKEN_IF condition TOKEN_THEN commands TOKEN_ELSE commands TOKEN_ENDIF { IF* ifCommand = new IF($2, $4, $6);  $$ = ifCommand; }
-                | TOKEN_IF condition TOKEN_THEN commands TOKEN_ENDIF { IF_THEN* ifCommand = new IF_THEN($2, $4);  $$ = ifCommand; }
-                | TOKEN_WHILE condition TOKEN_DO commands TOKEN_END_WHILE {WHILE* WHILE_COMMAND = new WHILE($2, $4); $$ = WHILE_COMMAND; }
-
+                | TOKEN_IF condition TOKEN_THEN commands TOKEN_ELSE commands TOKEN_ENDIF { $$ = new IF($2, $4, $6); }
+                | TOKEN_IF condition TOKEN_THEN commands TOKEN_ENDIF { $$ = new IF_THEN($2, $4); }
+                | TOKEN_WHILE condition TOKEN_DO commands TOKEN_END_WHILE { $$ = new WHILE($2, $4); }
+                | TOKEN_REPEAT commands TOKEN_UNTIL condition TOKEN_SEMICOLON { $$ = new REPEAT($2, $4); }
 expression:       value
                 | value TOKEN_PLUS value { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack($3); complexCommand->pushCommandBack(new ADD_TWO_NUMBERS_FROM_STACK_AND_PUSH_RESULT_ON_STACK()); $$ = complexCommand; }
                 | value TOKEN_MINUS value { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack($3); complexCommand->pushCommandBack(new SUBTRACT_TWO_NUMBERS_FROM_STACK_AND_PUSH_RESULT_ON_STACK()); $$ = complexCommand; }
