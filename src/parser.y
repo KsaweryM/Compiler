@@ -87,11 +87,11 @@ expression:       value
                 | condition
 
 condition:        value EQ_TOKEN value { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack($3); complexCommand->pushCommandBack(new EQ_CONDITION()); $$ = complexCommand; }
-                | value NEQ_TOKEN value { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack(new EQ_CONDITION()); $$ = complexCommand; }
-                | value LE_TOKEN value { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack(new EQ_CONDITION()); $$ = complexCommand; }
-                | value GE_TOKEN value { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack(new EQ_CONDITION()); $$ = complexCommand; }
-                | value LEQ_TOKEN value { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack(new EQ_CONDITION()); $$ = complexCommand; }
-                | value GEQ_TOKEN value { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack(new EQ_CONDITION()); $$ = complexCommand; }
+                | value NEQ_TOKEN value { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack($3); complexCommand->pushCommandBack(new NEQ_CONDITION()); $$ = complexCommand; }
+                | value LE_TOKEN value { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack($3); complexCommand->pushCommandBack(new LE_CONDITION()); $$ = complexCommand; }
+                | value GE_TOKEN value { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack($3); complexCommand->pushCommandBack(new GE_CONDITION()); $$ = complexCommand; }
+                | value LEQ_TOKEN value { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack($3); complexCommand->pushCommandBack(new LEQ_CONDITION()); $$ = complexCommand; }
+                | value GEQ_TOKEN value { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack($3); complexCommand->pushCommandBack(new GEQ_CONDITION()); $$ = complexCommand; }
 
 value:            num { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack(new PUSH($1)); $$ = complexCommand; }
                 | identifier { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack(variableDirector->pushVariableOntoStackByAddressOfVariableFromStack());  $$ = complexCommand; } 

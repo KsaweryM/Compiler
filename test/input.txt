@@ -1,17 +1,15 @@
 VAR
-tablica[10:20], indeks, wartosc
+A, B, yes, no
 BEGIN
-    READ indeks;
-    READ wartosc;
-    tablica[indeks] ASSIGN wartosc;
+    yes ASSIGN 1;
+    no ASSIGN 0;
+
+    READ A;
+    READ B;
     
-    IF tablica[indeks] EQ 1 THEN
-        WRITE 1;
+    IF A GEQ B THEN
+        WRITE yes;
     ELSE
-        IF tablica[indeks] EQ -1 THEN
-            WRITE -1;
-        ELSE
-            WRITE 0;
-        ENDIF
+        WRITE no;
     ENDIF
 END
