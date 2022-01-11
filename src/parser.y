@@ -80,6 +80,7 @@ command:          identifier ASSIGN expression TOKEN_SEMICOLON {if(PARSER_DEBUG)
                 | TOKEN_WRITE value TOKEN_SEMICOLON { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($2); complexCommand->pushCommandBack(new WRITE()); $$ = complexCommand; }
                 | TOKEN_READ identifier TOKEN_SEMICOLON { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($2); complexCommand->pushCommandBack(new READ()); $$ = complexCommand;}
                 | TOKEN_IF condition TOKEN_THEN commands TOKEN_ELSE commands TOKEN_ENDIF { IF* ifCommand = new IF($2, $4, $6);  $$ = ifCommand; }
+                | TOKEN_IF condition TOKEN_THEN commands TOKEN_ENDIF { IF_THEN* ifCommand = new IF_THEN($2, $4);  $$ = ifCommand; }
 
 expression:       value
                 | value TOKEN_PLUS value { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack($3); complexCommand->pushCommandBack(new ADD_TWO_NUMBERS_FROM_STACK_AND_PUSH_RESULT_ON_STACK()); $$ = complexCommand; }

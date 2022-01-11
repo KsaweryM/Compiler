@@ -42,6 +42,9 @@
 #include "LEQ_CONDITION.h"
 #include "GEQ_CONDITION.h"
 #include "IF.h"
+#include "IF_THEN.h"
 #include "WRITE.h"
 #include "READ.h"
+#include "WHILE.h"
+#include "REPEAT.h"
 #endif

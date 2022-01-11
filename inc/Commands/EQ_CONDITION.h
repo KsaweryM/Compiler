@@ -33,7 +33,7 @@ public:
 
       ComplexCommand* isFalse = new ComplexCommand();
       isFalse->pushCommandBack(new SAVE_REGISTER_ON_STACK(VMregister::d));
-      isFalse->pushCommandBack(new JUMP(isTrue->getLength()));
+      isFalse->pushCommandBack(new JUMP(isTrue->getLength() + 1));
       
       pushCommandBack(new JZERO(isFalse->getLength() + 1));
       pushCommandBack(isFalse); // x != y

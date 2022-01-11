@@ -7,9 +7,7 @@ BEGIN
     READ A;
     READ B;
     
-    IF A GEQ B THEN
+    IF A EQ B THEN
         WRITE yes;
-    ELSE
-        WRITE no;
     ENDIF
 END
