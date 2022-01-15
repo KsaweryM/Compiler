@@ -14,13 +14,15 @@ public:
       // w przeciwnym razie zapisz na stosie wartość 0
       
       pushCommandBack(new SWAP(VMregister::b));       // teraz w rejestrze a jest wartość b, a w rejestrze b jest wartość a
-      pushCommandBack(new JPOS(7));                   // jeśli b > 0, to przeskocz zmianę znaku
-      pushCommandBack(new SWAP(VMregister::b));       // b <= 0,  teraz w rejestrze a jest wartość a, a w rejestrze b jest wartość
-      pushCommandBack(new RESET(VMregister::c));
-      pushCommandBack(new SWAP(VMregister::c));       // teraz w rejestrze a jest wartość 0, a w rejestrze c jest wartość a
-      pushCommandBack(new SUB(VMregister::b));        // teraz w rejestrze a jest wartość -b, a w rejestrze c jest wartość a
-      pushCommandBack(new SWAP(VMregister::b));       // teraz w rejestrze a jest wartość b, w rejestrze b jest wartość -b, w rejestrze c jest wartość a
-      pushCommandBack(new SWAP(VMregister::c));       // teraz w rejestrze a jest wartość a, w rejestrze b jest wartość -b, w rejestrze c jest wartość b
+      pushCommandBack(new JPOS(8));                   // jeśli b > 0, to przeskocz zmianę znaku
+      pushCommandBack(new SWAP(VMregister::b));       // b <= 0,  teraz w rejestrze a jest wartość a, a w rejestrze b jest wartość b    |A| |B| |C|
+      pushCommandBack(new RESET(VMregister::c));      //                                                                                 a   b   0
+      pushCommandBack(new SWAP(VMregister::c));       //                                                                                 0   b   a
+      pushCommandBack(new SUB(VMregister::b));        //                                                                                -b   b   a
+      pushCommandBack(new SWAP(VMregister::b));       //                                                                                 b  -b   a
+      pushCommandBack(new SWAP(VMregister::c));       //                                                                                 a  -b   b
+      pushCommandBack(new SWAP(VMregister::b));       //                                                                                -b   a   b
+      pushCommandBack(new SWAP(VMregister::b));       //                                                                                 a  -b   b
       pushCommandBack(new RESET(VMregister::c));      // rejestr, w którym będzie wynik
       pushCommandBack(new RESET(VMregister::f));      // rejestr, zawierający stałą 1
       pushCommandBack(new INC(VMregister::f));
@@ -57,15 +59,15 @@ public:
         pushCommandBack(new SHIFT(VMregister::g));     // a wraca do pierwotnej wartości, g == -e, więc w rejestrze a mamy a * 2^e * 2^(-e) = a, a w rejestrze c obecny wynik mnożenia
         pushCommandBack(new JUMP(-31));                // 
 
-
       // w rejestrze c mamy wartość mnożenia a * |b|
-      pushCommandBack(new LOAD_FROM_STACK_TO_REGISTER(VMregister::a));   // w rejestrze a mamy wartość b (początkowa)
-      // sprawdź czy wartość b była mniejsza od 0, jeżeli tak to zmień znak rejestru c
-      pushCommandBack(new JPOS(4));                   // jeśli b > 0, to przeskocz zmianę znaku
-      // skończyliśmy algorytm mnożenia, więc b == 0
-      pushCommandBack(new SWAP(VMregister::b));       // teraz w rejestrze a mamy 0, a w rejestrze b mamy ujemną liczbę b
-      pushCommandBack(new SUB(VMregister::b));        // teraz w rejestrze a mamy 0 - b = -b, a w rejestrze b mamy ujemną liczbę b
-      pushCommandBack(new SWAP(VMregister::c));       // teraz w rejestrze c mamy -b   
+      pushCommandBack(new LOAD_FROM_STACK_TO_REGISTER(VMregister::a));                // w rejestrze a mamy wartość b (początkowa)
+      pushCommandBack(new RESET(VMregister::b));
+      pushCommandBack(new JPOS(4));                                                   // jeśli b > 0, to przeskocz zmianę znaku
+                                                                                      //      |A| |B| |C|                                  
+                                                                                      //       b   0   c
+      pushCommandBack(new SWAP(VMregister::b));                                       //       0   b   c
+      pushCommandBack(new SUB(VMregister::c));                                        //       -c  b   c
+      pushCommandBack(new SWAP(VMregister::c));                                       //       c   b   -c                                                                                     
       pushCommandBack(new SAVE_REGISTER_ON_STACK(VMregister::c)); 
     }
 };
