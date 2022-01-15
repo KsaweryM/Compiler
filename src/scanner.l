@@ -8,15 +8,21 @@
 int yylex();
 %}
 
+EVERY 						(.|\t|\n| )
+
 %%
 [ \t]+  { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem biały znak" << std::endl;   }
 ^#.*\n { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem komentarz" << std::endl;  }
+"(".*")" { if (SCANNER_DEBUG) std::cerr << "KOMENTARZ" << std::endl;}
 "VAR"     { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem VAR" << std::endl;  return TOKEN_VAR; }
 "BEGIN"   {  if (SCANNER_DEBUG) std::cerr << "Rozpoznałem BEGIN" << std::endl; return TOKEN_BEGIN; }
 "END"     { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem END" << std::endl;   return TOKEN_END; }
 "ASSIGN"  {  if (SCANNER_DEBUG) std::cerr << "Rozpoznałem ASSIGN" << std::endl;  return ASSIGN; }
 "PLUS"      {  if (SCANNER_DEBUG) std::cerr << "Rozpoznałem +" << std::endl;  return TOKEN_PLUS;                               }
 "MINUS"      {  if (SCANNER_DEBUG) std::cerr << "Rozpoznałem -" << std::endl;  return TOKEN_MINUS;                               }
+"TIMES"  {  if (SCANNER_DEBUG) std::cerr << "Rozpoznałem *" << std::endl;  return TOKEN_TIMES;                               }
+"DIV"  {  if (SCANNER_DEBUG) std::cerr << "Rozpoznałem /" << std::endl;  return TOKEN_DIV;                               }
+"MOD"  {  if (SCANNER_DEBUG) std::cerr << "Rozpoznałem %" << std::endl;  return TOKEN_MOD;                               }
 "["      { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem [" << std::endl;   return TOKEN_LEFT_SQUARE_BRACKET;                               }
 "]"      {  if (SCANNER_DEBUG) std::cerr << "Rozpoznałem ]" << std::endl;  return TOKEN_RIGHT_SQUARE_BRACKET;                               }
 ";"      {  if (SCANNER_DEBUG) std::cerr << "Rozpoznałem ;" << std::endl;  return TOKEN_SEMICOLON; }
@@ -43,7 +49,6 @@ int yylex();
 "FROM" { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem FROM" << std::endl; return TOKEN_FROM; }
 "TO" { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem TO" << std::endl; return TOKEN_TO; }
 "DOWNTO"  { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem DOWNTO" << std::endl; return TOKEN_DOWNTO; }
-"DO" { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem DO" << std::endl; return TOKEN_DO; }
 "ENDFOR" { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem ENDFOR" << std::endl; return TOKEN_ENDFOR; }
 [A-Za-z][A-Za-z0-9]* {  if (SCANNER_DEBUG) std::cerr << "Rozpoznałem zmienną" << std::endl;  yylval.text = strdup(yytext); return pidentifier; }
 -?[0-9]+  { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem liczbę" << std::endl;  yylval.number = atoi(yytext);  return num; }

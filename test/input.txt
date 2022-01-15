@@ -1,15 +1,10 @@
 VAR
-    j, k
+a, b
 BEGIN
-    READ k;
-    FOR i FROM 1 TO k DO
-        IF i GE 1 THEN
-            j ASSIGN j PLUS j;
-        ELSE
-            j ASSIGN 1;
-        ENDIF
-    ENDFOR
-    IF k GEQ 1 THEN
-        WRITE j;
-    ENDIF
+    WHILE 1 EQ 1 DO
+    READ a;
+    READ b;
+    a ASSIGN a TIMES b;
+    WRITE a;
+    ENDWHILE
 END

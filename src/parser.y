@@ -33,6 +33,9 @@
 %token <number> ASSIGN
 %left  <number> TOKEN_PLUS
 %left  <number> TOKEN_MINUS
+%left  <number> TOKEN_TIMES
+%left  <number> TOKEN_DIV
+%left  <number> TOKEN_MOD
 %token <number> TOKEN_LEFT_SQUARE_BRACKET
 %token <number> TOKEN_RIGHT_SQUARE_BRACKET
 %token <number> TOKEN_SEMICOLON
@@ -105,6 +108,9 @@ iterator:   pidentifier TOKEN_FROM value { ComplexCommand* complexCommand = new 
 expression:       value
                 | value TOKEN_PLUS value { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack($3); complexCommand->pushCommandBack(new ADD_TWO_NUMBERS_FROM_STACK_AND_PUSH_RESULT_ON_STACK()); $$ = complexCommand; }
                 | value TOKEN_MINUS value { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack($3); complexCommand->pushCommandBack(new SUBTRACT_TWO_NUMBERS_FROM_STACK_AND_PUSH_RESULT_ON_STACK()); $$ = complexCommand; }
+                | value TOKEN_TIMES value { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack($3); complexCommand->pushCommandBack(new TIMES_TWO_NUMBERS_FROM_STACK_AND_PUSH_RESULT_ON_STACK()); $$ = complexCommand; }
+                | value TOKEN_DIV value { $$ = 0; }
+                | value TOKEN_MOD value { $$ = 0; }
                 | condition
 
 condition:        value EQ_TOKEN value { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack($3); complexCommand->pushCommandBack(new EQ_CONDITION()); $$ = complexCommand; }
