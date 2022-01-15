@@ -13,7 +13,7 @@ private:
     int firstIndex;
     int lastIndex;
     int size;
-
+    bool iterator = false;
 public:
     VariableContainer(int address, int firstIndex, int lastIndex) {
         this->firstIndex = firstIndex;
@@ -25,6 +25,22 @@ public:
             variables.push_back(new Variable(address));
             address++;
         }
+    }
+
+    void setAsIterator() {
+        iterator = true;
+    }
+
+    bool isIterator() {
+        return iterator;
+    }
+
+    ComplexCommand* incrementFirstElement() {
+        return variables[0]->increment();
+    }
+
+    ComplexCommand* decrementFirstElement() {
+        return variables[0]->decrement();
     }
 
     ComplexCommand* pushAddressOfVariableOntoStack(int index) {

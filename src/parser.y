@@ -59,10 +59,13 @@
 %token <number> TOKEN_FOR
 %token <number> TOKEN_FROM
 %token <number> TOKEN_TO
+%token <number> TOKEN_DOWNTO
 %token <number> TOKEN_ENDFOR
 
 %token <text> pidentifier
 %token <number> num
+
+%type <com> iterator
 
 %type <com> input
 %type <com> program
@@ -87,13 +90,18 @@ declarations:     declarations TOKEN_COMMA pidentifier { if(PARSER_DEBUG) std::c
 commands:         commands command { if(PARSER_DEBUG) std::cerr << "Tworzę ciąg komend" << std::endl; ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack($2); $$ = complexCommand; }
                 | command { if(PARSER_DEBUG) std::cerr << "Tworzę pojedyńczą komende" << std::endl; $$ = $1; }
 
-command:          identifier ASSIGN expression TOKEN_SEMICOLON {if(PARSER_DEBUG)  std::cerr << "Przpisuje wartość zmiennej" << std::endl; ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack($3); complexCommand->pushCommandBack(variableDirector->assign());  $$ = complexCommand; }
+command:          identifier ASSIGN expression TOKEN_SEMICOLON {if(PARSER_DEBUG)  std::cerr << "Przpisuje wartość zmiennej" << std::endl; ComplexCommand* complexCommand = new ComplexCommand(); if($1->isIterator()) {  throw std::invalid_argument("Cannot assign value to iterator!"); } complexCommand->pushCommandBack($1); complexCommand->pushCommandBack($3); complexCommand->pushCommandBack(variableDirector->assign());  $$ = complexCommand; }
                 | TOKEN_WRITE value TOKEN_SEMICOLON { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($2); complexCommand->pushCommandBack(new WRITE()); $$ = complexCommand; }
                 | TOKEN_READ identifier TOKEN_SEMICOLON { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($2); complexCommand->pushCommandBack(new READ()); $$ = complexCommand;}
                 | TOKEN_IF condition TOKEN_THEN commands TOKEN_ELSE commands TOKEN_ENDIF { $$ = new IF($2, $4, $6); }
                 | TOKEN_IF condition TOKEN_THEN commands TOKEN_ENDIF { $$ = new IF_THEN($2, $4); }
                 | TOKEN_WHILE condition TOKEN_DO commands TOKEN_END_WHILE { $$ = new WHILE($2, $4); }
                 | TOKEN_REPEAT commands TOKEN_UNTIL condition TOKEN_SEMICOLON { $$ = new REPEAT($2, $4); }
+                | TOKEN_FOR iterator TOKEN_TO value TOKEN_DO commands TOKEN_ENDFOR { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($2); ComplexCommand* condition = new ComplexCommand(); condition->pushCommandBack(variableDirector->pushAddressOfVariableOntoStack($2->getIteratorName())); condition->pushCommandBack(variableDirector->pushVariableOntoStackByAddressOfVariableFromStack()); condition->pushCommandBack($4); condition->pushCommandBack(new LEQ_CONDITION()); ComplexCommand* loopBody = new ComplexCommand(); loopBody->pushCommandBack($6); loopBody->pushCommandBack(variableDirector->incrementIterator($2->getIteratorName()));  complexCommand->pushCommandBack(new WHILE(condition, loopBody)); $$ = complexCommand; }
+                | TOKEN_FOR iterator TOKEN_DOWNTO value TOKEN_DO commands TOKEN_ENDFOR { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($2); ComplexCommand* condition = new ComplexCommand(); condition->pushCommandBack(variableDirector->pushAddressOfVariableOntoStack($2->getIteratorName())); condition->pushCommandBack(variableDirector->pushVariableOntoStackByAddressOfVariableFromStack()); condition->pushCommandBack($4); condition->pushCommandBack(new GEQ_CONDITION()); ComplexCommand* loopBody = new ComplexCommand(); loopBody->pushCommandBack($6); loopBody->pushCommandBack(variableDirector->decrementIterator($2->getIteratorName()));  complexCommand->pushCommandBack(new WHILE(condition, loopBody)); $$ = complexCommand; }
+
+iterator:   pidentifier TOKEN_FROM value { ComplexCommand* complexCommand = new ComplexCommand();  complexCommand->pushCommandBack(variableDirector->declareIterator(std::string($1))); complexCommand->pushCommandBack(variableDirector->pushAddressOfVariableOntoStack(std::string($1))); complexCommand->pushCommandBack($3); complexCommand->pushCommandBack(variableDirector->assign()); complexCommand->setIteratorName(std::string($1)); $$ = complexCommand; }
+
 expression:       value
                 | value TOKEN_PLUS value { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack($3); complexCommand->pushCommandBack(new ADD_TWO_NUMBERS_FROM_STACK_AND_PUSH_RESULT_ON_STACK()); $$ = complexCommand; }
                 | value TOKEN_MINUS value { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack($3); complexCommand->pushCommandBack(new SUBTRACT_TWO_NUMBERS_FROM_STACK_AND_PUSH_RESULT_ON_STACK()); $$ = complexCommand; }
@@ -109,7 +117,7 @@ condition:        value EQ_TOKEN value { ComplexCommand* complexCommand = new Co
 value:            num { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack(new PUSH($1)); $$ = complexCommand; }
                 | identifier { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack(variableDirector->pushVariableOntoStackByAddressOfVariableFromStack());  $$ = complexCommand; } 
 
-identifier:       pidentifier { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack(variableDirector->pushAddressOfVariableOntoStack(std::string($1))); $$ = complexCommand;  }
+identifier:       pidentifier { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack(variableDirector->pushAddressOfVariableOntoStack(std::string($1))); if(variableDirector->isIterator(std::string($1))) complexCommand->setAsIterator(); $$ = complexCommand;  }
                 | pidentifier TOKEN_LEFT_SQUARE_BRACKET num TOKEN_RIGHT_SQUARE_BRACKET { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack(variableDirector->pushAddressOfVariableFromArrayOntoStack(std::string($1), $3)); $$ = complexCommand;  }
                 | pidentifier TOKEN_LEFT_SQUARE_BRACKET pidentifier TOKEN_RIGHT_SQUARE_BRACKET  { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack(variableDirector->pushAddressOfVariableOntoStack(std::string($3))); complexCommand->pushCommandBack(variableDirector->getIndexFromStackAndPushAddressOfVariableFromArrayOntoStack($1)); $$ = complexCommand; }
                 

@@ -18,7 +18,7 @@ public:
 
         pushCommandBack(load);
 
-        pushCommandBack(new JZERO(-(commands->getLength() + condition->getLength() + load->getLength())));         
+        pushCommandBack(new JPOS(-(commands->getLength() + condition->getLength() + load->getLength())));         
         /*
         ComplexCommand* ifBody = new ComplexCommand();
         LOAD_FROM_STACK_TO_REGISTER* load = new LOAD_FROM_STACK_TO_REGISTER(VMregister::a);

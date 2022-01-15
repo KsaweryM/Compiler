@@ -15,6 +15,31 @@ public:
         isInitialized = false;
     }
 
+    ComplexCommand* increment() {
+        ComplexCommand* command = new ComplexCommand();
+        
+        command->pushCommandBack(new PUSH(address));
+        command->pushCommandBack(new LOAD_FROM_STACK_TO_REGISTER(VMregister::b));
+        command->pushCommandBack(new LOAD(VMregister::b));
+        command->pushCommandBack(new INC(VMregister::a));
+        command->pushCommandBack(new STORE(VMregister::b));
+
+        return command;
+    }
+
+    ComplexCommand* decrement() {
+        ComplexCommand* command = new ComplexCommand();
+        
+        command->pushCommandBack(new PUSH(address));
+        command->pushCommandBack(new LOAD_FROM_STACK_TO_REGISTER(VMregister::b));
+        command->pushCommandBack(new LOAD(VMregister::b));
+        command->pushCommandBack(new DEC(VMregister::a));
+        command->pushCommandBack(new STORE(VMregister::b));
+
+        return command;
+    }
+    
+
     ComplexCommand* pushAddressOntoStack() {
         return new PUSH(address);
     }

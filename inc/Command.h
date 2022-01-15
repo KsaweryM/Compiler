@@ -4,9 +4,13 @@
 #include <iostream>
 #include <string>
 #include "VMregister.h"
+#include <string>
 
 class Command {
 protected:
+	bool iterator = false;
+	std::string iteratorName;
+
 	std::string registerToString(VMregister instructionRegister) {
 		switch (instructionRegister) {
 		case VMregister::a:
@@ -38,6 +42,22 @@ public:
 
 	virtual ~Command() {
 
+	}
+
+	void setAsIterator() {
+		iterator = true;
+	}
+
+	bool isIterator() {
+		return iterator;
+	}
+
+	void setIteratorName(std::string iteratorName) {
+		this->iteratorName = iteratorName;
+	}
+
+	std::string getIteratorName() {
+		return iteratorName;
 	}
 };
 

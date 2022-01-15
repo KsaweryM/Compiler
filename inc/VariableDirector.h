@@ -33,6 +33,31 @@ public:
         return new INC(VMregister::h);
     }
 
+    Command* declareIterator(std::string name) {
+        if (VARIABLE_DIRECTOR_DEBUG)
+            std::cerr << "Zarządca zmiennych stworzył iterator \"" << name  << "\"" << std::endl; 
+
+        VariableContainer* container = new VariableContainer(stack, 0, 0);
+        container->setAsIterator();
+
+        variableContainers[name] = container;
+        stack += 1;
+
+        return new INC(VMregister::h);
+    }
+
+    Command* incrementIterator(std::string name) {
+        return variableContainers[name]->incrementFirstElement();
+    }
+
+    Command* decrementIterator(std::string name) {
+        return variableContainers[name]->decrementFirstElement();
+    }
+
+    bool isIterator(std::string name) {
+        return variableContainers[name]->isIterator();
+    }
+
     Command* declareArray(std::string name, int firstIndex, int lastIndex) {
         if (VARIABLE_DIRECTOR_DEBUG)
             std::cerr << "Zarządca zmiennych stworzył tablice \"" << name << "\"" << std::endl;
