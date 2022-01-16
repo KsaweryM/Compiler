@@ -107,24 +107,63 @@ public:
         pushCommandBack(new SUB(VMregister::c));
         //                                                                  -c          |a| % |C|           c          [|a|/|c|]          0              a
         pushCommandBack(new SWAP(VMregister::b));
-        //                                                               |a| % |B|          -c              c          [|a|/|c|]          0              a
+        //                                                               |a| % |c|          -c              c          [|a|/|c|]          0              a
         pushCommandBack(new SWAP(VMregister::e));
         //                                                                   0              -c              c          [|a|/|c|]      |a| % |B|          a
         pushCommandBack(new SUB(VMregister::f));
         //                                                                  -a              -c              c          [|a|/|c|]      |a| % |B|          a
         pushCommandBack(new RESET(VMregister::g));
         //                                                                  -a              -c              c          [|a|/|c|]      |a| % |B|          a              0
-
+        
+        
+                
+        pushCommandBack(new DISPLAY_REGISTERS());
+        pushCommandBack(new HALT());
         
 
+        // tutaj zaczynam obliczać wynik całkowitoliczbowy
+        pushCommandBack(new SWAP(VMregister::f));
+        //                                                                   a              -c              c          [|a|/|c|]      |a| % |B|          -a             0
+        pushCommandBack(new JNEG(1)); 
+        // a > 0
+        pushCommandBack(new SWAP(VMregister::c));
+        //                                                                   c              -c              a          [|a|/|c|]      |a| % |B|          -a             0    
+        pushCommandBack(new JNEG(2));
+        //      a > 0 and c > 0
+        //      jeśli a > 0 i c > 0, to można już skoczyć do rozwiazania
+        pushCommandBack(new JUMP(1));
+        // JUMP HERE IF a > 0 and c < 0
+        //                                                                   c              -c              a          [|a|/|c|]      |a| % |B|          -a             0
+        pushCommandBack(new SWAP(VMregister::g));        
+        //                                                                   0              -c              a          [|a|/|c|]      |a| % |B|          -a             c
+        pushCommandBack(new SUB(VMregister::d));        
+        //                                                              -[|a|/|c|]          -c              a          [|a|/|c|]      |a| % |B|          -a             c
+        pushCommandBack(new SWAP(VMregister::e));        
+        //                                                               |a| % |B|          -c              a          [|a|/|c|]     -[|a|/|c|]          -a             c
+        pushCommandBack(new JZERO(2));       
+        pushCommandBack(new DEC(VMregister::e));
+        //                                                               |a| % |B|          -c              a          [|a|/|c|]     -[|a|/|c|] - 1      -a             c
+        pushCommandBack(new SWAP(VMregister::e));
+        //                                                              -[|a|/|c|] - 1      -c              a          [|a|/|c|]       |a| % |B|         -a             c
+        pushCommandBack(new SWAP(VMregister::d));
+        //                                                               [|a|/|c|]          -c              a         -[|a|/|c|] - 1   |a| % |B|         -a             c
+        // dla a > 0 and c < 0
+        // a % b = |a| % |c| + (|a| % |c| > 0) * (-|b|)
+        pushCommandBack(new SWAP(VMregister::e)); 
+        //                                                               |a| % |c|          -c              a         -[|a|/|c|] - 1   [|a|/|c|]         -a             c
+        pushCommandBack(new JZERO(2));
+        pushCommandBack(new ADD(VMregister::g));
+        //                                                             |a| % |c| - |c|      -c              a         -[|a|/|c|] - 1   [|a|/|c|]         -a             c
+        // w rejestrze a mamy "a % c", w w rejestrze d mamy [a/b]
+        pushCommandBack(new SWAP(VMregister::e));
 
-        
+        //                                                               [|a|/|c|]          -c              a         -[|a|/|c|] - 1  |a| % |c| - |c|    -a             c
+        pushCommandBack(new JUMP(3));
+        // JUMP HERE IF a < 0
+        pushCommandBack(new HALT());
 
-
-
-
-
-
+        // JUMP HERE IF a < 0 and b > 0
+        pushCommandBack(new HALT());
 
         pushCommandBack(new SAVE_REGISTER_ON_STACK(VMregister::d));
     }
