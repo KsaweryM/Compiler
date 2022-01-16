@@ -16,7 +16,32 @@ public:
         // d wynik dzielenia
         // b ujemny licznik wewnątrz pętli
         // e licznik wewnątrz pętli
-        // f jedynka
+
+        // f <==> a < 0
+        // g <==> c < 0
+
+        // zapisujemy w zmiennej f czy rejestr a jest ujemny
+        pushCommandBack(new RESET(VMregister::f));
+        pushCommandBack(new RESET(VMregister::g));
+
+        pushCommandBack(new JPOS(6));
+        pushCommandBack(new JZERO(5));
+        pushCommandBack(new INC(VMregister::f));
+        pushCommandBack(new RESET(VMregister::b));
+        pushCommandBack(new SWAP(VMregister::b)); // teraz w rejestrze a jest wartość 0, a w rejestrze b jest wartość a
+        pushCommandBack(new SUB(VMregister::b));  // teraz w rejestrze a jest wartość -a, a w rejestrze b jest wartość a
+
+        pushCommandBack(new SWAP(VMregister::c));
+        
+        pushCommandBack(new JPOS(6));
+        pushCommandBack(new JZERO(5));
+        pushCommandBack(new INC(VMregister::g));
+        pushCommandBack(new RESET(VMregister::b));
+        pushCommandBack(new SWAP(VMregister::b));
+        pushCommandBack(new SUB(VMregister::b));
+
+        pushCommandBack(new SWAP(VMregister::c));
+
         pushCommandBack(new RESET(VMregister::d));
         
         // dzielenie przez zero daje zero
@@ -63,6 +88,16 @@ public:
             pushCommandBack(new SWAP(VMregister::c));                           //   -(e-1)  a-c*2^(e-1)     c       d+2^(e-1)  e-1      
             pushCommandBack(new SWAP(VMregister::b));                           // a-c*2^(e-1) -(e-1)        c       d+2^(e-1)  e-1      
             pushCommandBack(new JUMP(-35));
+
+
+        pushCommandBack(new ADD(VMregister::c));
+
+
+        // powyżej zostało wykonane dzielenie |a| i |c| ( dla wartości bezwzględnych )
+        // w rejestrze a znajduje się |a| % |c|
+        // w rejestrze d znajduje się [|a|/|c|]
+        // 
+        pushCommandBack(new PUT());
         pushCommandBack(new SAVE_REGISTER_ON_STACK(VMregister::d));
     }
 };
