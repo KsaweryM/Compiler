@@ -20,9 +20,8 @@ public:
         // f <==> kopia a
 
         pushCommandBack(new RESET(VMregister::f));            
-        pushCommandBack(new SWAP(VMregister::a));
+        pushCommandBack(new SWAP(VMregister::f));
         pushCommandBack(new ADD(VMregister::f));
-        pushCommandBack(new SWAP(VMregister::a));
 
         pushCommandBack(new JPOS(5));
         pushCommandBack(new JZERO(4));
@@ -100,7 +99,7 @@ public:
         //                                                                  |A|            |B|            |C|            |D|            |E|            |F|            |G|
         // a > 0 <==> f == 0                                             |a| % |c|                         c          [|a|/|c|]                         a
         // if a > 0
-        //pushCommandBack(new SWAP(VMregister::f));                                                   
+        pushCommandBack(new SWAP(VMregister::f));                                                   
         pushCommandBack(new PUT());
         
 
