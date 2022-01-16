@@ -18,6 +18,10 @@ public:
         // e licznik wewnątrz pętli
 
         // f <==> kopia a
+        pushCommandBack(new RESET(VMregister::g));
+        pushCommandBack(new SWAP(VMregister::g));
+        pushCommandBack(new ADD(VMregister::c));
+        pushCommandBack(new SWAP(VMregister::g));
 
         pushCommandBack(new RESET(VMregister::f));            
         pushCommandBack(new SWAP(VMregister::f));
@@ -112,26 +116,39 @@ public:
         //                                                                   0              -c              c          [|a|/|c|]      |a| % |B|          a
         pushCommandBack(new SUB(VMregister::f));
         //                                                                  -a              -c              c          [|a|/|c|]      |a| % |B|          a
-        pushCommandBack(new RESET(VMregister::g));
-        //                                                                  -a              -c              c          [|a|/|c|]      |a| % |B|          a              0
-        
-        
-                
-        pushCommandBack(new DISPLAY_REGISTERS());
-        pushCommandBack(new HALT());
-        
+        //pushCommandBack(new RESET(VMregister::g));
+        //                                                                  -a              -c              c          [|a|/|c|]      |a| % |B|          a              C       
+
+        // błąd polega na tym, że zapamiętujemy wartość |c| i uznajemy, że dzielnik był nieujemny
+        // można zapisać oryginalną wartość c do rejestru g i jeżeli wartość tego rejestru jest mniejesza od 0, to zamień miejscami rejestry b i c
+
+        pushCommandBack(new SWAP(VMregister::g));
+        //                                                                   C              -c              c          [|a|/|c|]      |a| % |B|          a             -a       
+        pushCommandBack(new JPOS(4));
+        pushCommandBack(new SWAP(VMregister::b));
+        //                                                                  -c               C              c          [|a|/|c|]      |a| % |B|          a             -a       
+        pushCommandBack(new SWAP(VMregister::c));
+        //                                                                   c               C              -c         [|a|/|c|]      |a| % |B|          a             -a       
+        pushCommandBack(new SWAP(VMregister::b));
+        //                                                                   C               c              -c         [|a|/|c|]      |a| % |B|          a             -a       
+        pushCommandBack(new SWAP(VMregister::g));
+        //                                                                  -a               c              -c         [|a|/|c|]      |a| % |B|          a              C       
+
+        //pushCommandBack(new DISPLAY_REGISTERS());
+        //pushCommandBack(new HALT());
 
         // tutaj zaczynam obliczać wynik całkowitoliczbowy
+        pushCommandBack(new RESET(VMregister::g));
         pushCommandBack(new SWAP(VMregister::f));
         //                                                                   a              -c              c          [|a|/|c|]      |a| % |B|          -a             0
-        pushCommandBack(new JNEG(1)); 
+        pushCommandBack(new JNEG(16)); 
         // a > 0
         pushCommandBack(new SWAP(VMregister::c));
         //                                                                   c              -c              a          [|a|/|c|]      |a| % |B|          -a             0    
         pushCommandBack(new JNEG(2));
         //      a > 0 and c > 0
         //      jeśli a > 0 i c > 0, to można już skoczyć do rozwiazania
-        pushCommandBack(new JUMP(1));
+        pushCommandBack(new JUMP(15));
         // JUMP HERE IF a > 0 and c < 0
         //                                                                   c              -c              a          [|a|/|c|]      |a| % |B|          -a             0
         pushCommandBack(new SWAP(VMregister::g));        
@@ -152,7 +169,7 @@ public:
         pushCommandBack(new SWAP(VMregister::e)); 
         //                                                               |a| % |c|          -c              a         -[|a|/|c|] - 1   [|a|/|c|]         -a             c
         pushCommandBack(new JZERO(2));
-        pushCommandBack(new ADD(VMregister::g));
+        pushCommandBack(new ADD(VMregister::b));
         //                                                             |a| % |c| - |c|      -c              a         -[|a|/|c|] - 1   [|a|/|c|]         -a             c
         // w rejestrze a mamy "a % c", w w rejestrze d mamy [a/b]
         pushCommandBack(new SWAP(VMregister::e));
