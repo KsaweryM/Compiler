@@ -97,10 +97,27 @@ public:
         // g == 1 <==> c < 0
 
         //                                                                  |A|            |B|            |C|            |D|            |E|            |F|            |G|
-        // a > 0 <==> f == 0                                             |a| % |c|                         c          [|a|/|c|]                         a
-        // if a > 0
-        pushCommandBack(new SWAP(VMregister::f));                                                   
-        pushCommandBack(new PUT());
+        //                                                               |a| % |c|          ?              c           [|a|/|c|]         ?              a
+        //
+        pushCommandBack(new RESET(VMregister::b));
+        pushCommandBack(new RESET(VMregister::e));
+        //                                                               |a| % |c|          0               c          [|a|/|c|]          0              a
+        pushCommandBack(new SWAP(VMregister::b));
+        //                                                                   0          |a| % |C|           c          [|a|/|c|]          0              a
+        pushCommandBack(new SUB(VMregister::c));
+        //                                                                  -c          |a| % |C|           c          [|a|/|c|]          0              a
+        pushCommandBack(new SWAP(VMregister::b));
+        //                                                               |a| % |B|          -c              c          [|a|/|c|]          0              a
+        pushCommandBack(new SWAP(VMregister::e));
+        //                                                                   0              -c              c          [|a|/|c|]      |a| % |B|          a
+        pushCommandBack(new SUB(VMregister::f));
+        //                                                                  -a              -c              c          [|a|/|c|]      |a| % |B|          a
+        pushCommandBack(new RESET(VMregister::g));
+        //                                                                  -a              -c              c          [|a|/|c|]      |a| % |B|          a              0
+
+        
+
+
         
 
 
