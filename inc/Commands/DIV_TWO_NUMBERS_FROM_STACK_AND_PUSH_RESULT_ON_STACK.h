@@ -20,21 +20,24 @@ public:
         pushCommandBack(new RESET(VMregister::f));
         pushCommandBack(new INC(VMregister::f));
 
-        // na początku zakładam, że a >= 0 oraz b > 0
+        // na początku zakładam, że a >= 0 oraz c > 0
         //                                                                          |A|    |B|   |C|     |D|   |E|  |F|
-        // while a >= b <==> while a - b >= 0 <==> jump jeśli a - b < 0              a      ?     c       0     ?    1
+        // while a >= c <==> while a - c >= 0 <==> jump jeśli a - c < 0              a      ?     c       0     ?    1
         pushCommandBack(new SUB(VMregister::c));                              //    a-c     ?     c       0     ?    1 
-        pushCommandBack(new JNEG(30));                                        //    a-c     ?     c       0     ?    1 
+        pushCommandBack(new JNEG(33));                                        //    a-c     ?     c       0     ?    1 
             pushCommandBack(new ADD(VMregister::c));                          //     a      ?     c       0     ?    1 
             pushCommandBack(new RESET(VMregister::e));                        //     a      ?     c       0     0    1
             pushCommandBack(new SWAP(VMregister::c));                         //     c      ?     a       0     0    1         while c <= a <==> while c - a <= 0 <==> jump jeśli c - a > 0
-            pushCommandBack(new SUB(VMregister::c));                          //    c-a     ?     a       0     0    1
+            pushCommandBack(new SHIFT(VMregister::a));                        //    c*2     ?     a       0     0    q
+            pushCommandBack(new SUB(VMregister::c));                          //   c*2-a    ?     a       0     0    1
             pushCommandBack(new JPOS(6));                                     //    c-a     ?     a       0     0    1
                 pushCommandBack(new ADD(VMregister::c));                      //     c      ?     a       0     0    1         // problem z wartością a przy wyjściu z pętli
                 pushCommandBack(new SHIFT(VMregister::f));                    //    c*2     ?     a       0     0    1
                 pushCommandBack(new SWAP(VMregister::c));                     //     a      ?    c*2      0     0    1
                 pushCommandBack(new INC(VMregister::e));                      //     a      ?    c*2      0     1    1
-                pushCommandBack(new JUMP(-7));                                //     a      ?    c*2      0     1    1    
+                pushCommandBack(new JUMP(-8));                                //     a      ?    c*2      0     1    1    
+            pushCommandBack(new ADD(VMregister::c));                          //     c      ?     a       0     0    1
+            pushCommandBack(new SWAP(VMregister::c));                         //     a      ?     c       0     0    1
             pushCommandBack(new DEC(VMregister::f));                          //     a      ? c*2^(e+1)   0     e    0          c > a, ale c / 2 <= a oraz c / 2 = b * 2^e
             pushCommandBack(new DEC(VMregister::f));                          //     a      ? c*2^(e+1)   0     e   -1 
             pushCommandBack(new SWAP(VMregister::c));                         // c*2^(e+1)  ?     a       0     e   -1
@@ -50,11 +53,10 @@ public:
             pushCommandBack(new SWAP(VMregister::b));                         //     0  a-c*2^e c*2^e    d+e    e    1
             pushCommandBack(new SUB(VMregister::e));                          //    -e  a-c*2^e c*2^e    d+e    e    1
             pushCommandBack(new SWAP(VMregister::b));                         //  a-c*2^e  -e   c*2^e    d+e    e    1
-            pushCommandBack(new SWAP(VMregister::a));                         //   c*2^e   -e   a-c*2^e  d+e    e    1
+            pushCommandBack(new SWAP(VMregister::c));                         //   c*2^e   -e   a-c*2^e  d+e    e    1
             pushCommandBack(new SHIFT(VMregister::b));                        //     c     -e   a-c*2^e  d+e    e    1
             pushCommandBack(new SWAP(VMregister::c));                         //  a-c*2^e  -e     c      d+e    e    1
-            pushCommandBack(new JUMP(-30));                                   //  a-c*2^e  -e     c      d+e    e    1
-    
+            pushCommandBack(new JUMP(-33));                                   //  a-c*2^e  -e     c      d+e    e    1
         pushCommandBack(new SAVE_REGISTER_ON_STACK(VMregister::d));
     }
 };
