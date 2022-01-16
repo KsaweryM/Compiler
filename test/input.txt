@@ -1,8 +1,10 @@
 VAR
 a, b, c
 BEGIN
+    WHILE 1 EQ 1 DO
     READ a;
     READ b;
     b ASSIGN a DIV b;
     WRITE b;
+    ENDWHILE
 END
