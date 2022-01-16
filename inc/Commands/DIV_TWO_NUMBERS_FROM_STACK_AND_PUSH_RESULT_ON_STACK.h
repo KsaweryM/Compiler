@@ -17,25 +17,23 @@ public:
         // b ujemny licznik wewnątrz pętli
         // e licznik wewnątrz pętli
 
-        // f <==> a < 0
-        // g <==> c < 0
+        // f <==> kopia a
 
-        // zapisujemy w zmiennej f czy rejestr a jest ujemny
-        pushCommandBack(new RESET(VMregister::f));
-        pushCommandBack(new RESET(VMregister::g));
+        pushCommandBack(new RESET(VMregister::f));            
+        pushCommandBack(new SWAP(VMregister::a));
+        pushCommandBack(new ADD(VMregister::f));
+        pushCommandBack(new SWAP(VMregister::a));
 
-        pushCommandBack(new JPOS(6));
-        pushCommandBack(new JZERO(5));
-        pushCommandBack(new INC(VMregister::f));
+        pushCommandBack(new JPOS(5));
+        pushCommandBack(new JZERO(4));
         pushCommandBack(new RESET(VMregister::b));
         pushCommandBack(new SWAP(VMregister::b)); // teraz w rejestrze a jest wartość 0, a w rejestrze b jest wartość a
         pushCommandBack(new SUB(VMregister::b));  // teraz w rejestrze a jest wartość -a, a w rejestrze b jest wartość a
 
         pushCommandBack(new SWAP(VMregister::c));
         
-        pushCommandBack(new JPOS(6));
-        pushCommandBack(new JZERO(5));
-        pushCommandBack(new INC(VMregister::g));
+        pushCommandBack(new JPOS(5));
+        pushCommandBack(new JZERO(4));
         pushCommandBack(new RESET(VMregister::b));
         pushCommandBack(new SWAP(VMregister::b));
         pushCommandBack(new SUB(VMregister::b));
@@ -96,8 +94,22 @@ public:
         // powyżej zostało wykonane dzielenie |a| i |c| ( dla wartości bezwzględnych )
         // w rejestrze a znajduje się |a| % |c|
         // w rejestrze d znajduje się [|a|/|c|]
-        // 
+        // f == 1 <==> a < 0
+        // g == 1 <==> c < 0
+
+        //                                                                  |A|            |B|            |C|            |D|            |E|            |F|            |G|
+        // a > 0 <==> f == 0                                             |a| % |c|                         c          [|a|/|c|]                         a
+        // if a > 0
+        //pushCommandBack(new SWAP(VMregister::f));                                                   
         pushCommandBack(new PUT());
+        
+
+
+
+
+
+
+
         pushCommandBack(new SAVE_REGISTER_ON_STACK(VMregister::d));
     }
 };
