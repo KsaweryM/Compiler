@@ -5,10 +5,10 @@
 
 class JNEG : public Command {
 private:
-	int k;
+	long long int k;
 
 public:
-	JNEG(int k) {
+	JNEG(long long int k) {
 		this->k = k;
 	}
 

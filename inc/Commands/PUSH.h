@@ -6,7 +6,7 @@
 
 class PUSH : public ComplexCommand {
 public:
-	PUSH(int n) {
+	PUSH(long long int n) {
         pushCommandBack(new INC(VMregister::h));
         pushCommandBack(new SAVE_REGISTER_ON_STACK(VMregister::a));
         pushCommandBack(new SAVE_REGISTER_ON_STACK(VMregister::b));

@@ -5,10 +5,10 @@
 
 class JUMP : public Command {
 private:
-	int k;
+	long long int k;
 
 public:
-	JUMP(int k) {
+	JUMP(long long int k) {
 		this->k = k;
 	}
 

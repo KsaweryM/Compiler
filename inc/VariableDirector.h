@@ -13,7 +13,7 @@
 
 class VariableDirector {
 private:
-    int stack = 0;
+    long long int stack = 0;
     std::map<std::string, VariableContainer*> variableContainers;
 
     /*
@@ -58,11 +58,11 @@ public:
         return variableContainers[name]->isIterator();
     }
 
-    Command* declareArray(std::string name, int firstIndex, int lastIndex) {
+    Command* declareArray(std::string name, long long int firstIndex, long long int lastIndex) {
         if (VARIABLE_DIRECTOR_DEBUG)
             std::cerr << "Zarządca zmiennych stworzył tablice \"" << name << "\"" << std::endl;
         variableContainers[name] = new VariableContainer(stack, firstIndex, lastIndex);
-        int size = lastIndex - firstIndex + 1;
+        long long int size = lastIndex - firstIndex + 1;
 
         stack += size;
 
@@ -93,7 +93,7 @@ public:
         return variableContainers[name]->getIndexFromStackAndPushAddressOfVariableOntoStack();
     }
 
-    Command* pushAddressOfVariableFromArrayOntoStack(std::string name, int index) {
+    Command* pushAddressOfVariableFromArrayOntoStack(std::string name, long long int index) {
         if (VARIABLE_DIRECTOR_DEBUG)
             std::cerr << "Zarządca zmiennych z indeksem w kodzie ustawia adres zmiennej \"" << name << "\" na stos" << std::endl;
 

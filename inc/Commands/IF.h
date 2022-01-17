@@ -18,14 +18,14 @@ public:
         // teraz condition, które jest równe 0 lub 1 jest w rejestrze a
         pushCommandBack(new LOAD_FROM_STACK_TO_REGISTER(VMregister::a));
 
-        int elseCommandsLength = elseCommands->getLength();
+        long long int elseCommandsLength = elseCommands->getLength();
 
         ComplexCommand* complexThen = new ComplexCommand();
 
         complexThen->pushCommandBack(thenCommands);
         complexThen->pushCommandBack(new JUMP(elseCommandsLength + 1));
         
-        int complexThenLength = complexThen->getLength();
+        long long int complexThenLength = complexThen->getLength();
       
 
         // jeśli condition == 0, to przeskocz do else

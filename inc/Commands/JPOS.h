@@ -5,10 +5,10 @@
 
 class JPOS : public Command {
 private:
-	int k;
+	long long int k;
 
 public:
-	JPOS(int k) {
+	JPOS(long long int k) {
 		this->k = k;
 	}
 

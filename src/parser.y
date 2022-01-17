@@ -17,7 +17,7 @@
 
 %union
 {
-    int number;
+    long long int number;
     char* text;
     Command* com;
 }

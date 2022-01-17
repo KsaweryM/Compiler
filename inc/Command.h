@@ -34,7 +34,7 @@ protected:
 		throw std::invalid_argument("Unknow register!");
 	}
 public:
-	virtual int getLength() {
+	virtual long long int getLength() {
 		return 1;
 	}
 

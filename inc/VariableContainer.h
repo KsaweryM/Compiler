@@ -8,20 +8,20 @@
 class VariableContainer {
 private:
     std::vector<Variable*> variables;
-    int address;
-    int containerAddress;
-    int firstIndex;
-    int lastIndex;
-    int size;
+    long long int address;
+    long long int containerAddress;
+    long long int firstIndex;
+    long long int lastIndex;
+    long long int size;
     bool iterator = false;
 public:
-    VariableContainer(int address, int firstIndex, int lastIndex) {
+    VariableContainer(long long int address, long long int firstIndex, long long int lastIndex) {
         this->firstIndex = firstIndex;
         this->lastIndex = lastIndex;
         this->size = lastIndex - firstIndex + 1;
         this->containerAddress = address;
 
-        for (int i = 0; i < size; i++) {
+        for (long long int i = 0; i < size; i++) {
             variables.push_back(new Variable(address));
             address++;
         }
@@ -43,7 +43,7 @@ public:
         return variables[0]->decrement();
     }
 
-    ComplexCommand* pushAddressOfVariableOntoStack(int index) {
+    ComplexCommand* pushAddressOfVariableOntoStack(long long int index) {
         if (index < firstIndex || index > lastIndex) {
             std::cerr << "index = " << index << " firstIndex = " << firstIndex << " lastIndex = " << lastIndex << std::endl;
             throw std::invalid_argument("Niepoprawny indeks");

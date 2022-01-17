@@ -6,7 +6,7 @@
 
 class CREATE_NUMBER : public ComplexCommand {
 private:
-    void createNumber(int n) {
+    void createNumber(long long int n) {
         if (n <= 1) {   
             pushCommandBack(new RESET(VMregister::a));
             pushCommandBack(new RESET(VMregister::b));
@@ -27,7 +27,7 @@ private:
     }
 
 public:
-    CREATE_NUMBER(int n) {
+    CREATE_NUMBER(long long int n) {
         if (n >= 0) {
             createNumber(n);
         }

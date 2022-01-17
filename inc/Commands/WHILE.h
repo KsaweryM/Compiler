@@ -22,7 +22,7 @@ public:
         ifBody->pushCommandBack(new JZERO(commands->getLength() + 2)); 
 
         // poniższe zmienna 
-        int distanceToIf = condition->getLength() + load->getLength() + commands->getLength() + 1;
+        long long int distanceToIf = condition->getLength() + load->getLength() + commands->getLength() + 1;
         ComplexCommand* loopBody = new ComplexCommand();
         loopBody->pushCommandBack(commands);
         loopBody->pushCommandBack(new JUMP(-distanceToIf));

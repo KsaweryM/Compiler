@@ -6,11 +6,11 @@
 
 class Variable {
 private:
-    int address;
+    long long int address;
     bool isInitialized;
 
 public:
-    Variable(int address) {
+    Variable(long long int address) {
         this->address = address;
         isInitialized = false;
     }

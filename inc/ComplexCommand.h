@@ -17,8 +17,8 @@ public:
 		instructions.push_back(Instruction);
 	}
 
-	int getLength() override {
-		int length = 0;
+	long long int getLength() override {
+		long long int length = 0;
 
 		std::deque<Command*>::iterator it;
 

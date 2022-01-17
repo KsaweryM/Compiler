@@ -5,10 +5,10 @@
 
 class JZERO : public Command {
 private:
-	int k;
+	long long int k;
 
 public:
-	JZERO(int k) {
+	JZERO(long long int k) {
 		this->k = k;
 	}
 

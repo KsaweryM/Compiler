@@ -6,7 +6,7 @@
 
 class POP : public ComplexCommand {
 public:
-	POP(int n) {
+	POP(long long int n) {
         pushCommandBack(new LOAD(VMregister::h));
         pushCommandBack(new DEC(VMregister::h));
     }
