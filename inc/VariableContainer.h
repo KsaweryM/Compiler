@@ -7,7 +7,7 @@
 
 class VariableContainer {
 private:
-    std::vector<Variable*> variables;
+    //std::vector<Variable*> variables;
     long long int address;
     long long int containerAddress;
     long long int firstIndex;
@@ -21,10 +21,12 @@ public:
         this->size = lastIndex - firstIndex + 1;
         this->containerAddress = address;
 
+        /*
         for (long long int i = 0; i < size; i++) {
             variables.push_back(new Variable(address));
             address++;
         }
+        */
     }
 
     void setAsIterator() {
@@ -36,11 +38,31 @@ public:
     }
 
     ComplexCommand* incrementFirstElement() {
-        return variables[0]->increment();
+        //return variables[0]->increment();
+
+        ComplexCommand* command = new ComplexCommand();
+        
+        command->pushCommandBack(new PUSH(address));
+        command->pushCommandBack(new LOAD_FROM_STACK_TO_REGISTER(VMregister::b));
+        command->pushCommandBack(new LOAD(VMregister::b));
+        command->pushCommandBack(new INC(VMregister::a));
+        command->pushCommandBack(new STORE(VMregister::b));
+
+        return command;
     }
 
     ComplexCommand* decrementFirstElement() {
-        return variables[0]->decrement();
+        //return variables[0]->decrement();
+
+        ComplexCommand* command = new ComplexCommand();
+        
+        command->pushCommandBack(new PUSH(address));
+        command->pushCommandBack(new LOAD_FROM_STACK_TO_REGISTER(VMregister::b));
+        command->pushCommandBack(new LOAD(VMregister::b));
+        command->pushCommandBack(new DEC(VMregister::a));
+        command->pushCommandBack(new STORE(VMregister::b));
+
+        return command;
     }
 
     ComplexCommand* pushAddressOfVariableOntoStack(long long int index) {
@@ -49,7 +71,8 @@ public:
             throw std::invalid_argument("Niepoprawny indeks");
         }
 
-        return variables[index - firstIndex]->pushAddressOntoStack();
+        //return variables[index - firstIndex]->pushAddressOntoStack();
+        return new PUSH(address + index - firstIndex);
     }
 
     ComplexCommand* getIndexFromStackAndPushAddressOfVariableOntoStack() {
@@ -133,11 +156,12 @@ public:
     */
 
     ~VariableContainer() {
+        /*
         std::vector<Variable*>::iterator it;
 
         for (it = variables.begin(); it != variables.end(); it++) {
             delete* it;
-        }
+        }*/
     }
 };
 

@@ -1,7 +1,7 @@
 #ifndef VARIABLE_DIRECTOR_H
 #define VARIABLE_DIRECTOR_H
 
-#define VARIABLE_DIRECTOR_DEBUG 0
+#define VARIABLE_DIRECTOR_DEBUG 1
 
 #include <string>
 #include <map>
@@ -60,12 +60,16 @@ public:
 
     Command* declareArray(std::string name, long long int firstIndex, long long int lastIndex) {
         if (VARIABLE_DIRECTOR_DEBUG)
-            std::cerr << "Zarządca zmiennych stworzył tablice \"" << name << "\"" << std::endl;
+            std::cerr << "Zarządca zmiennych tworzy tablice \"" << name << "\"" << std::endl;
         variableContainers[name] = new VariableContainer(stack, firstIndex, lastIndex);
         long long int size = lastIndex - firstIndex + 1;
 
         stack += size;
 
+        if (VARIABLE_DIRECTOR_DEBUG)
+            std::cerr << "Zarządca zmiennych stworzył tablice \"" << name << "\"" << std::endl;
+
+        // dla dużych tablic kompilator nie daje sobie rady z INCN() Trzeba zrobić lepszą wersję 
         return new INCN(VMregister::h, size);      
     }
 

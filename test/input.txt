@@ -1,27 +1,35 @@
 VAR
-    n, m, reszta, potega, dzielnik
+  tab[-921:1230],
+  a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z
 BEGIN
-    READ n;
-    dzielnik ASSIGN 2;
-    m ASSIGN dzielnik TIMES dzielnik;
-    WHILE n GEQ m DO
-        potega ASSIGN 0;
-        reszta ASSIGN n MOD dzielnik;
-        WHILE reszta EQ 0 DO
-            n ASSIGN n DIV dzielnik;
-            potega ASSIGN potega PLUS 1;
-            reszta ASSIGN n MOD dzielnik;
-        ENDWHILE
-        IF potega GE 0 THEN ( czy znaleziono dzielnik )
-            WRITE dzielnik;
-            WRITE potega;
-        ELSE
-            dzielnik ASSIGN dzielnik PLUS 1;
-            m ASSIGN dzielnik TIMES dzielnik;
-        ENDIF
-    ENDWHILE
-    IF n NEQ 1 THEN ( ostatni dzielnik )
-        WRITE n;
-        WRITE 1;
-    ENDIF
+  READ tab[-10];
+  a ASSIGN tab[-10];
+  b ASSIGN a;
+  c ASSIGN b PLUS a;
+  d ASSIGN c PLUS b;
+  e ASSIGN d PLUS c;
+  f ASSIGN e PLUS d;
+  g ASSIGN f PLUS e;
+  h ASSIGN g PLUS f;
+  i ASSIGN h PLUS g;
+  j ASSIGN i PLUS h;
+  k ASSIGN j PLUS i;
+  l ASSIGN k PLUS j;
+  m ASSIGN l PLUS k;
+  n ASSIGN m PLUS l;
+  o ASSIGN n PLUS m;
+  p ASSIGN o PLUS n;
+  q ASSIGN p PLUS o;
+  r ASSIGN q PLUS p;
+  s ASSIGN r PLUS q;
+  t ASSIGN s PLUS r;
+  u ASSIGN t PLUS s;
+  v ASSIGN u PLUS t;
+  w ASSIGN v PLUS u;
+  x ASSIGN w PLUS v;
+  y ASSIGN x PLUS w;
+  z ASSIGN y PLUS x;
+  a ASSIGN 10000 TIMES z;
+  tab[a] ASSIGN z;
+  WRITE tab[a];
 END
