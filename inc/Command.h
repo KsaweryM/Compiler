@@ -9,6 +9,8 @@
 class Command {
 protected:
 	bool iterator = false;
+	int anonymousIndex = -1;
+
 	std::string iteratorName;
 
 	std::string registerToString(VMregister instructionRegister) {
@@ -50,6 +52,14 @@ public:
 
 	bool isIterator() {
 		return iterator;
+	}
+
+	void setAnonymousIndex(int anonymousIndex) {
+		this->anonymousIndex = anonymousIndex;
+	}
+
+	int getAnonymousIndex() {
+		return anonymousIndex;
 	}
 
 	void setIteratorName(std::string iteratorName) {

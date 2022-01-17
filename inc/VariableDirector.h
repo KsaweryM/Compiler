@@ -14,6 +14,8 @@
 class VariableDirector {
 private:
     long long int stack = 0;
+    long long int topAnonymousIndex = 0;
+    std::map<int, VariableContainer*> anonymousVariableContainers;
     std::map<std::string, VariableContainer*> variableContainers;
 
     /*
@@ -36,6 +38,31 @@ public:
         stack += 1;
 
         return new INC(VMregister::h);
+    }
+
+    Command* declareAnonymousVariable(int* anonymousVariableIndex) {
+        if (VARIABLE_DIRECTOR_DEBUG)
+            std::cerr << "Zarządca zmiennych stworzył zmienną anonimową" << std::endl; 
+
+        VariableContainer* container = new VariableContainer(stack, 0, 0);
+        *anonymousVariableIndex = topAnonymousIndex;
+        anonymousVariableContainers[topAnonymousIndex] = container;
+        topAnonymousIndex += 1;
+        stack += 1;
+
+        return new INC(VMregister::h);
+    }
+
+    Command* pushAddressOfAnonymousVariableOntoStack(int anonymousVariableIndex) {
+        if (VARIABLE_DIRECTOR_DEBUG)
+            std::cerr << "Zarządca zmiennych ustawia adres zmiennej anonimowej na stos" << std::endl;
+
+        if (anonymousVariableContainers.count(anonymousVariableIndex) == 0) {
+            std::string text = "zmienna anonimowa nie istnieje!";
+            throw std::invalid_argument(text);
+        }
+
+        return anonymousVariableContainers[anonymousVariableIndex]->pushAddressOfVariableOntoStack(0);
     }
 
     Command* declareIterator(std::string name) {

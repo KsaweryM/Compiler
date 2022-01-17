@@ -69,7 +69,6 @@
 %token <number> num
 
 %type <com> iterator
-%type <com> iterator2
 
 %type <com> input
 %type <com> program
@@ -101,73 +100,10 @@ command:          identifier ASSIGN expression TOKEN_SEMICOLON {if(PARSER_DEBUG)
                 | TOKEN_IF condition TOKEN_THEN commands TOKEN_ENDIF { $$ = new IF_THEN($2, $4); }
                 | TOKEN_WHILE condition TOKEN_DO commands TOKEN_END_WHILE { $$ = new WHILE($2, $4); }
                 | TOKEN_REPEAT commands TOKEN_UNTIL condition TOKEN_SEMICOLON { $$ = new REPEAT($2, $4); }
-                | TOKEN_FOR iterator TOKEN_DO commands TOKEN_ENDFOR { 
-                    ComplexCommand* complexCommand = new ComplexCommand(); 
-                    complexCommand->pushCommandBack($2);
-                    
-                    ComplexCommand* condition = new ComplexCommand(); 
-                    condition->pushCommandBack(variableDirector->pushAddressOfVariableOntoStack($2->getIteratorName()));
-                    condition->pushCommandBack(variableDirector->pushVariableOntoStackByAddressOfVariableFromStack());
-                    condition->pushCommandBack(variableDirector->pushAddressOfAnonymousVariableOntoStack($2->getAnonymousIndex()));
-                    condition->pushCommandBack(variableDirector->pushVariableOntoStackByAddressOfVariableFromStack());
-                    condition->pushCommandBack(new LEQ_CONDITION());
-                    ComplexCommand* loopBody = new ComplexCommand();
-                    loopBody->pushCommandBack($4);
-                    loopBody->pushCommandBack(variableDirector->incrementIterator($2->getIteratorName()));
-                    complexCommand->pushCommandBack(new WHILE(condition, loopBody));
-                    $$ = complexCommand; }
-                | TOKEN_FOR iterator2 TOKEN_DO commands TOKEN_ENDFOR { 
-                    ComplexCommand* complexCommand = new ComplexCommand(); 
-                    complexCommand->pushCommandBack($2);
-                    
-                    ComplexCommand* condition = new ComplexCommand(); 
-                    condition->pushCommandBack(variableDirector->pushAddressOfVariableOntoStack($2->getIteratorName()));
-                    condition->pushCommandBack(variableDirector->pushVariableOntoStackByAddressOfVariableFromStack());
-                    condition->pushCommandBack(variableDirector->pushAddressOfAnonymousVariableOntoStack($2->getAnonymousIndex()));
-                    condition->pushCommandBack(variableDirector->pushVariableOntoStackByAddressOfVariableFromStack());
-                    condition->pushCommandBack(new GEQ_CONDITION());
-                    ComplexCommand* loopBody = new ComplexCommand();
-                    loopBody->pushCommandBack($4);
-                    loopBody->pushCommandBack(variableDirector->decrementIterator($2->getIteratorName()));
-                    complexCommand->pushCommandBack(new WHILE(condition, loopBody));
-                    $$ = complexCommand; }
+                | TOKEN_FOR iterator TOKEN_TO value TOKEN_DO commands TOKEN_ENDFOR { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($2); /*stwórz zmienną anonimową i zapamiętaj jej indeks. Dodaj adres zmienej anonimowej na stos. dodaj $4 na stos. Wykonaj assign, żeby przypisać do zmiennej anonimowej wartość z $4*/ ComplexCommand* condition = new ComplexCommand(); condition->pushCommandBack(variableDirector->pushAddressOfVariableOntoStack($2->getIteratorName())); condition->pushCommandBack(variableDirector->pushVariableOntoStackByAddressOfVariableFromStack()); /*condition->pushCommandBack($4); należy wymienić na adres zmiennej anonimowej*/ condition->pushCommandBack(new LEQ_CONDITION()); ComplexCommand* loopBody = new ComplexCommand(); loopBody->pushCommandBack($6); loopBody->pushCommandBack(variableDirector->incrementIterator($2->getIteratorName()));  complexCommand->pushCommandBack(new WHILE(condition, loopBody)); $$ = complexCommand; }
+                | TOKEN_FOR iterator TOKEN_DOWNTO value TOKEN_DO commands TOKEN_ENDFOR { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($2); ComplexCommand* condition = new ComplexCommand(); condition->pushCommandBack(variableDirector->pushAddressOfVariableOntoStack($2->getIteratorName())); condition->pushCommandBack(variableDirector->pushVariableOntoStackByAddressOfVariableFromStack()); condition->pushCommandBack($4); condition->pushCommandBack(new GEQ_CONDITION()); ComplexCommand* loopBody = new ComplexCommand(); loopBody->pushCommandBack($6); loopBody->pushCommandBack(variableDirector->decrementIterator($2->getIteratorName()));  complexCommand->pushCommandBack(new WHILE(condition, loopBody)); $$ = complexCommand; }
 
-
-iterator:   pidentifier TOKEN_FROM value TOKEN_TO value { 
-                                    ComplexCommand* complexCommand = new ComplexCommand(); 
-                                    complexCommand->pushCommandBack(variableDirector->declareIterator(std::string($1)));
-                                    complexCommand->pushCommandBack(variableDirector->pushAddressOfVariableOntoStack(std::string($1)));
-                                    complexCommand->pushCommandBack($3); 
-                                    complexCommand->pushCommandBack(variableDirector->assign());
-
-                                    int anonymousIndex = -1;
-                                    complexCommand->pushCommandBack(variableDirector->declareAnonymousVariable(&anonymousIndex));
-                                    complexCommand->pushCommandBack(variableDirector->pushAddressOfAnonymousVariableOntoStack(anonymousIndex));
-                                    complexCommand->pushCommandBack($5);
-                                    complexCommand->pushCommandBack(variableDirector->assign());
-
-                                    complexCommand->setIteratorName(std::string($1));
-                                    complexCommand->setAnonymousIndex(anonymousIndex);
-
-                                    $$ = complexCommand; }
-
-iterator2:   pidentifier TOKEN_FROM value TOKEN_DOWNTO value { 
-                                    ComplexCommand* complexCommand = new ComplexCommand(); 
-                                    complexCommand->pushCommandBack(variableDirector->declareIterator(std::string($1)));
-                                    complexCommand->pushCommandBack(variableDirector->pushAddressOfVariableOntoStack(std::string($1)));
-                                    complexCommand->pushCommandBack($3); 
-                                    complexCommand->pushCommandBack(variableDirector->assign());
-
-                                    int anonymousIndex = -1;
-                                    complexCommand->pushCommandBack(variableDirector->declareAnonymousVariable(&anonymousIndex));
-                                    complexCommand->pushCommandBack(variableDirector->pushAddressOfAnonymousVariableOntoStack(anonymousIndex));
-                                    complexCommand->pushCommandBack($5);
-                                    complexCommand->pushCommandBack(variableDirector->assign());
-
-                                    complexCommand->setIteratorName(std::string($1));
-                                    complexCommand->setAnonymousIndex(anonymousIndex);
-
-                                    $$ = complexCommand; }                                    
+iterator:   pidentifier TOKEN_FROM value { ComplexCommand* complexCommand = new ComplexCommand();  complexCommand->pushCommandBack(variableDirector->declareIterator(std::string($1))); complexCommand->pushCommandBack(variableDirector->pushAddressOfVariableOntoStack(std::string($1))); complexCommand->pushCommandBack($3); complexCommand->pushCommandBack(variableDirector->assign()); complexCommand->setIteratorName(std::string($1)); $$ = complexCommand; }
 
 expression:       value
                 | value TOKEN_PLUS value { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack($3); complexCommand->pushCommandBack(new ADD_TWO_NUMBERS_FROM_STACK_AND_PUSH_RESULT_ON_STACK()); $$ = complexCommand; }
