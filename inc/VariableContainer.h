@@ -18,6 +18,11 @@ public:
         this->lastIndex = lastIndex;
         this->size = lastIndex - firstIndex + 1;
         this->containerAddress = address;
+
+        if (firstIndex > lastIndex) {
+            std::string text = "pierwszy indeks tablicy jest wiekszy od drugiego!";
+            throw std::invalid_argument(text);
+        }
     }
 
     void setAsIterator() {

@@ -1,35 +1,18 @@
 VAR
-  tab[-987654321:1234567890],
-  a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z
+  s[0:100], n, m, a, j
 BEGIN
-  READ tab[-121212121];
-  a ASSIGN tab[-121212121];
-  b ASSIGN a;
-  c ASSIGN b PLUS a;
-  d ASSIGN c PLUS b;
-  e ASSIGN d PLUS c;
-  f ASSIGN e PLUS d;
-  g ASSIGN f PLUS e;
-  h ASSIGN g PLUS f;
-  i ASSIGN h PLUS g;
-  j ASSIGN i PLUS h;
-  k ASSIGN j PLUS i;
-  l ASSIGN k PLUS j;
-  m ASSIGN l PLUS k;
-  n ASSIGN m PLUS l;
-  o ASSIGN n PLUS m;
-  p ASSIGN o PLUS n;
-  q ASSIGN p PLUS o;
-  r ASSIGN q PLUS p;
-  s ASSIGN r PLUS q;
-  t ASSIGN s PLUS r;
-  u ASSIGN t PLUS s;
-  v ASSIGN u PLUS t;
-  w ASSIGN v PLUS u;
-  x ASSIGN w PLUS v;
-  y ASSIGN x PLUS w;
-  z ASSIGN y PLUS x;
-  a ASSIGN 10000 TIMES z;
-  tab[a] ASSIGN z;
-  WRITE tab[a];
+    READ n;
+    s[0] ASSIGN 1;
+    m ASSIGN n;
+    FOR i FROM 1 TO m DO
+		a ASSIGN i MOD 2;
+		j ASSIGN i MINUS 1;
+		IF a EQ 1 THEN
+			s[i] ASSIGN s[j] TIMES m;
+		ELSE
+			s[i] ASSIGN m TIMES s[j];
+		ENDIF
+		m ASSIGN m MINUS 1;
+    ENDFOR
+    WRITE s[n];
 END

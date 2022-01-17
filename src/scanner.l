@@ -50,7 +50,7 @@ EVERY 						(.|\t|\n| )
 "TO" { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem TO" << std::endl; return TOKEN_TO; }
 "DOWNTO"  { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem DOWNTO" << std::endl; return TOKEN_DOWNTO; }
 "ENDFOR" { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem ENDFOR" << std::endl; return TOKEN_ENDFOR; }
-[A-Za-z][A-Za-z0-9]* {  if (SCANNER_DEBUG) std::cerr << "Rozpoznałem zmienną" << std::endl;  yylval.text = strdup(yytext); return pidentifier; }
+[A-Za-z]+ {  if (SCANNER_DEBUG) std::cerr << "Rozpoznałem zmienną" << std::endl;  yylval.text = strdup(yytext); return pidentifier; }
 -?[0-9]+  { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem liczbę" << std::endl;  yylval.number = atoi(yytext);  return num; }
 .       {  if (SCANNER_DEBUG) std::cerr << "Nie rozpoznałem tego symbolu " << " - " << int(*yytext) << std::endl;  return TOKEN_ERROR;                              }
 

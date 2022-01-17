@@ -24,6 +24,11 @@ private:
     */
 public:
     Command* declareVariable(std::string name) {
+        if (variableContainers.count(name) != 0) {
+            std::string text = "Zmienna o tej nazwie zostala wczesniej zadeklarowana!";
+            throw std::invalid_argument(text);
+        }
+
         if (VARIABLE_DIRECTOR_DEBUG)
             std::cerr << "Zarządca zmiennych stworzył zmienną \"" << name  << "\"" << std::endl; 
 
@@ -59,6 +64,11 @@ public:
     }
 
     Command* declareArray(std::string name, long long int firstIndex, long long int lastIndex) {
+        if (variableContainers.count(name) != 0) {
+            std::string text = "Tablica o tej nazwie zostala wczesniej zadeklarowana!";
+            throw std::invalid_argument(text);
+        }
+
         if (VARIABLE_DIRECTOR_DEBUG)
             std::cerr << "Zarządca zmiennych stworzył tablice \"" << name << "\"" << std::endl;
         variableContainers[name] = new VariableContainer(stack, firstIndex, lastIndex);
