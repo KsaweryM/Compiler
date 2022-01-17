@@ -7,8 +7,6 @@
 
 class VariableContainer {
 private:
-    //std::vector<Variable*> variables;
-    long long int address;
     long long int containerAddress;
     long long int firstIndex;
     long long int lastIndex;
@@ -20,13 +18,6 @@ public:
         this->lastIndex = lastIndex;
         this->size = lastIndex - firstIndex + 1;
         this->containerAddress = address;
-
-        /*
-        for (long long int i = 0; i < size; i++) {
-            variables.push_back(new Variable(address));
-            address++;
-        }
-        */
     }
 
     void setAsIterator() {
@@ -38,11 +29,9 @@ public:
     }
 
     ComplexCommand* incrementFirstElement() {
-        //return variables[0]->increment();
-
         ComplexCommand* command = new ComplexCommand();
         
-        command->pushCommandBack(new PUSH(address));
+        command->pushCommandBack(new PUSH(containerAddress));
         command->pushCommandBack(new LOAD_FROM_STACK_TO_REGISTER(VMregister::b));
         command->pushCommandBack(new LOAD(VMregister::b));
         command->pushCommandBack(new INC(VMregister::a));
@@ -52,11 +41,9 @@ public:
     }
 
     ComplexCommand* decrementFirstElement() {
-        //return variables[0]->decrement();
-
         ComplexCommand* command = new ComplexCommand();
         
-        command->pushCommandBack(new PUSH(address));
+        command->pushCommandBack(new PUSH(containerAddress));
         command->pushCommandBack(new LOAD_FROM_STACK_TO_REGISTER(VMregister::b));
         command->pushCommandBack(new LOAD(VMregister::b));
         command->pushCommandBack(new DEC(VMregister::a));
@@ -71,8 +58,8 @@ public:
             throw std::invalid_argument("Niepoprawny indeks");
         }
 
+        return new PUSH(containerAddress + (index - firstIndex));
         //return variables[index - firstIndex]->pushAddressOntoStack();
-        return new PUSH(address + index - firstIndex);
     }
 
     ComplexCommand* getIndexFromStackAndPushAddressOfVariableOntoStack() {
@@ -161,7 +148,8 @@ public:
 
         for (it = variables.begin(); it != variables.end(); it++) {
             delete* it;
-        }*/
+        }
+        */
     }
 };
 
