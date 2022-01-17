@@ -1,10 +1,28 @@
 VAR
-a, b, c
+    a, b, c
 BEGIN
-    WHILE 1 EQ 1 DO
     READ a;
     READ b;
-    b ASSIGN a DIV b;
-    WRITE b;
-    ENDWHILE
+    c ASSIGN a DIV b;
+    WRITE c;
+    c ASSIGN a MOD b;
+    WRITE c;
+
+    b ASSIGN -1 TIMES b; ( a,-b )
+    c ASSIGN a DIV b;
+    WRITE c;
+    c ASSIGN a MOD b;
+    WRITE c;
+
+    a ASSIGN a TIMES -1; ( -a,-b )
+    c ASSIGN a DIV b;
+    WRITE c;
+    c ASSIGN a MOD b;
+    WRITE c;
+
+    b ASSIGN -1 TIMES b; ( -a,b )
+    c ASSIGN a DIV b;
+    WRITE c;
+    c ASSIGN a MOD b;
+    WRITE c;
 END

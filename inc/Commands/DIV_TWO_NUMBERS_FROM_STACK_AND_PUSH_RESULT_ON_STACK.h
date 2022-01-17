@@ -169,7 +169,7 @@ public:
         pushCommandBack(new SWAP(VMregister::e)); 
         //                                                               |a| % |c|          -c              a         -[|a|/|c|] - 1   [|a|/|c|]         -a             c
         pushCommandBack(new JZERO(2));
-        pushCommandBack(new ADD(VMregister::b));
+        pushCommandBack(new SUB(VMregister::b));
         //                                                             |a| % |c| - |c|      -c              a         -[|a|/|c|] - 1   [|a|/|c|]         -a             c
         // w rejestrze a mamy "a % c", w w rejestrze d mamy [a/b]
         pushCommandBack(new SWAP(VMregister::e));
