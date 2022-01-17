@@ -46,8 +46,9 @@ public:
         pushCommandBack(new RESET(VMregister::d));
         
         // dzielenie przez zero daje zero
+        pushCommandBack(new RESET(VMregister::e));
         pushCommandBack(new SWAP(VMregister::c));
-        pushCommandBack(new JZERO(38));
+        pushCommandBack(new JZERO(85));
         pushCommandBack(new SWAP(VMregister::c));
 
         // na początku zakładam, że a >= 0 oraz c > 0
