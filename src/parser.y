@@ -138,7 +138,7 @@ command:          identifier ASSIGN expression TOKEN_SEMICOLON {if(PARSER_DEBUG)
 iterator:   pidentifier TOKEN_FROM value TOKEN_TO value { 
                                     ComplexCommand* complexCommand = new ComplexCommand(); 
                                     complexCommand->pushCommandBack(variableDirector->declareIterator(std::string($1)));
-                                    delete $1;
+                                    
                                     complexCommand->pushCommandBack(variableDirector->pushAddressOfVariableOntoStack(std::string($1)));
                                     complexCommand->pushCommandBack($3); 
                                     complexCommand->pushCommandBack(variableDirector->assign());
@@ -152,12 +152,13 @@ iterator:   pidentifier TOKEN_FROM value TOKEN_TO value {
                                     complexCommand->setIteratorName(std::string($1));
                                     complexCommand->setAnonymousIndex(anonymousIndex);
 
+                                    delete $1;
                                     $$ = complexCommand; }
 
 iterator2:   pidentifier TOKEN_FROM value TOKEN_DOWNTO value { 
                                     ComplexCommand* complexCommand = new ComplexCommand(); 
                                     complexCommand->pushCommandBack(variableDirector->declareIterator(std::string($1)));
-                                    delete $1;
+                            
                                     complexCommand->pushCommandBack(variableDirector->pushAddressOfVariableOntoStack(std::string($1)));
                                     complexCommand->pushCommandBack($3); 
                                     complexCommand->pushCommandBack(variableDirector->assign());
@@ -171,6 +172,7 @@ iterator2:   pidentifier TOKEN_FROM value TOKEN_DOWNTO value {
                                     complexCommand->setIteratorName(std::string($1));
                                     complexCommand->setAnonymousIndex(anonymousIndex);
 
+                                    delete $1;
                                     $$ = complexCommand; }                                    
 
 expression:       value
