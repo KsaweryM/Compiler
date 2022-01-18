@@ -6,6 +6,7 @@
 
 #define SCANNER_DEBUG 0
 int yylex();
+
 %}
 
 %x COMMENT
@@ -62,4 +63,8 @@ int yylex();
 
 int yywrap() {
     return 1;
+}
+
+void set_input_file(FILE* file) {
+    yyin = file;
 }

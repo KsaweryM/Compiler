@@ -7,6 +7,7 @@
 
     extern int yylex();
     extern int yyparse();
+    extern void set_input_file(FILE* file);
     int yyerror(std::string);
 
     VariableDirector* variableDirector;
@@ -196,10 +197,16 @@ int yyerror(std::string error) {
     std::cout << error << std::endl;
 }
 
-int main() {
-    std::cerr << std::endl;
+int main(int argc, char** argv) {
     variableDirector = new VariableDirector();
+    FILE* file = fopen(argv[1] , "r");
+    if (file == NULL) {
+        std::string text = "Plik wejściowy o podanej nazwie nie istnieje!";
+        throw std::invalid_argument(text);
+    }
+    set_input_file(file);
     yyparse();
+    fclose(file);
     return 0;
 }
 

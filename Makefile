@@ -6,7 +6,7 @@ make: clean
 	bison -o build/parser_y.c -d src/parser.y
 	flex -o build/scanner_l.c src/scanner.l
 	g++ $(FLAGS) -o build/compiler build/parser_y.c build/scanner_l.c -lm 
-	cat test/input.txt | ./build/compiler > build/asembler
+	./build/compiler test/input.txt > build/asembler
 	./vm/vm build/asembler
 
 test: 	build/asembler	
