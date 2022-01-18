@@ -7,7 +7,7 @@ make: clean
 
 test: build	
 	rm -f build/asembler
-	./build/kompilator test/input.txt > build/asembler
+	./build/kompilator test/input.txt build/asembler
 	./vm/vm build/asembler
 
 clean:

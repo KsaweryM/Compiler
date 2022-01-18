@@ -209,6 +209,12 @@ public:
 		for (it = variableContainers.begin(); it != variableContainers.end(); it++) {
 			delete it->second;
 		}
+
+        std::map<int, VariableContainer*>::iterator it2;
+
+        for (it2 = anonymousVariableContainers.begin(); it2 != anonymousVariableContainers.end(); it2++) {
+			delete it2->second;
+		}
     }
 };
 
