@@ -8,12 +8,15 @@
 int yylex();
 %}
 
-EVERY 						(.|\t|\n| )
+%x COMMENT
 
 %%
+
+"("                                 {   if(SCANNER_DEBUG) std::cerr << "Rozpoznałem początek komentarza" << std::endl; BEGIN(COMMENT);   }
+<COMMENT>")"                     {  if(SCANNER_DEBUG) std::cerr << "Rozpoznałem koniec komentarza" << std::endl; BEGIN(INITIAL);     }
+<COMMENT>\n                     { if(SCANNER_DEBUG) std::cerr << "Rozpoznałem nową linię w komentarzu" << std::endl;              }
+<COMMENT>[^"("")"]|[^")"]|[^\n]  { if(SCANNER_DEBUG)  std::cerr << "Rozpoznałem teskt w komentarzu - " << yytext << std::endl;            }
 [ \t]+  { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem biały znak" << std::endl;   }
-^#.*\n { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem komentarz" << std::endl;  }
-"(".*")" { if (SCANNER_DEBUG) std::cerr << "KOMENTARZ" << std::endl;}
 "VAR"     { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem VAR" << std::endl;  return TOKEN_VAR; }
 "BEGIN"   {  if (SCANNER_DEBUG) std::cerr << "Rozpoznałem BEGIN" << std::endl; return TOKEN_BEGIN; }
 "END"     { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem END" << std::endl;   return TOKEN_END; }
@@ -52,7 +55,7 @@ EVERY 						(.|\t|\n| )
 "ENDFOR" { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem ENDFOR" << std::endl; return TOKEN_ENDFOR; }
 [A-Za-z]+ {  if (SCANNER_DEBUG) std::cerr << "Rozpoznałem zmienną" << std::endl;  yylval.text = strdup(yytext); return pidentifier; }
 -?[0-9]+  { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem liczbę" << std::endl;  yylval.number = atoi(yytext);  return num; }
-.       {  if (SCANNER_DEBUG) std::cerr << "Nie rozpoznałem tego symbolu " << " - " << int(*yytext) << std::endl;  return TOKEN_ERROR;                              }
+.       {  if (SCANNER_DEBUG) std::cerr << "Nie rozpoznałem tego symbolu " << " - " << yytext;   return TOKEN_ERROR;                              }
 
 
 %%
