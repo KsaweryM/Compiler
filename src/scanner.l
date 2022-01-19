@@ -3,10 +3,11 @@
 #include <string>
 #include "../inc/Command.h"
 #include "parser_y.h"
+#include <bits/stdc++.h>
 
 #define SCANNER_DEBUG 0
 int yylex();
-
+int lineCount = 1;
 %}
 
 %x COMMENT
@@ -15,8 +16,9 @@ int yylex();
 
 "("                                 {   if(SCANNER_DEBUG) std::cerr << "Rozpoznałem początek komentarza" << std::endl; BEGIN(COMMENT);   }
 <COMMENT>")"                     {  if(SCANNER_DEBUG) std::cerr << "Rozpoznałem koniec komentarza" << std::endl; BEGIN(INITIAL);     }
-<COMMENT>\n                     { if(SCANNER_DEBUG) std::cerr << "Rozpoznałem nową linię w komentarzu" << std::endl;              }
+<COMMENT>\n                     { if(SCANNER_DEBUG) std::cerr << "Rozpoznałem nową linię w komentarzu" << std::endl; lineCount++;           }
 <COMMENT>[^"("")"]|[^")"]|[^\n]  { if(SCANNER_DEBUG)  std::cerr << "Rozpoznałem teskt w komentarzu - " << yytext << std::endl;            }
+\n { lineCount++; }
 [ \t]+  { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem biały znak" << std::endl;   }
 "VAR"     { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem VAR" << std::endl;  return TOKEN_VAR; }
 "BEGIN"   {  if (SCANNER_DEBUG) std::cerr << "Rozpoznałem BEGIN" << std::endl; return TOKEN_BEGIN; }
@@ -55,9 +57,8 @@ int yylex();
 "DOWNTO"  { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem DOWNTO" << std::endl; return TOKEN_DOWNTO; }
 "ENDFOR" { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem ENDFOR" << std::endl; return TOKEN_ENDFOR; }
 [A-Za-z]+ {  if (SCANNER_DEBUG) std::cerr << "Rozpoznałem zmienną" << std::endl;  yylval.text = strdup(yytext); return pidentifier; }
--?[0-9]+  { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem liczbę" << std::endl;  yylval.number = atoi(yytext);  return num; }
+-?[0-9]+  { if (SCANNER_DEBUG) std::cerr << "Rozpoznałem liczbę" << std::endl;  yylval.number = std::stoll(yytext);  return num; }
 .       {  if (SCANNER_DEBUG) std::cerr << "Nie rozpoznałem tego symbolu " << " - " << yytext;   return TOKEN_ERROR;                              }
-
 
 %%
 

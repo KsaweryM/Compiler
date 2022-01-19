@@ -10,5 +10,10 @@ test: build
 	./build/kompilator test/input.txt build/asembler
 	./vm/vm build/asembler
 
+test2: build	
+	rm -f build/asembler
+	./build/kompilator test/input.txt build/asembler
+	./vm/vm-cln build/asembler
+
 clean:
 	rm -rf build/

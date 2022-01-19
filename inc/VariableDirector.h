@@ -35,6 +35,7 @@ public:
             std::cerr << "Zarządca zmiennych stworzył zmienną \"" << name  << "\"" << std::endl; 
 
         variableContainers[name] = new VariableContainer(stack, 0, 0);
+        variableContainers[name]->setAsVariable();
         stack += 1;
 
         return new INC(VMregister::h);
@@ -65,6 +66,19 @@ public:
         return anonymousVariableContainers[anonymousVariableIndex]->pushAddressOfVariableOntoStack(0);
     }
 
+    void undeclareIterator(std::string name) {
+        if (variableContainers.count(name) == 0) {
+            std::string text = "Nie można usunąć iteratora o podanej nazwie, ponieważ nie istnieje!";
+            throw std::invalid_argument(text);
+        }
+
+        VariableContainer* container = variableContainers[name];
+
+        variableContainers.erase(name);  
+
+        delete container; 
+    }
+
     Command* declareIterator(std::string name) {
         if (VARIABLE_DIRECTOR_DEBUG)
             std::cerr << "Zarządca zmiennych stworzył iterator \"" << name  << "\"" << std::endl; 
@@ -90,6 +104,22 @@ public:
         return variableContainers[name]->isIterator();
     }
 
+    bool isVariable(std::string name) {
+        if (variableContainers.count(name) == 0) {
+            throw std::invalid_argument("Zmienna nie została zadeklarowana!");  
+        }
+
+        return variableContainers[name]->isVariable();
+    }
+
+    bool isArray(std::string name) {
+        if (variableContainers.count(name) == 0) {
+            throw std::invalid_argument("Zmienna nie została zadeklarowana!");  
+        }
+
+        return variableContainers[name]->isArray();
+    }
+
     Command* declareArray(std::string name, long long int firstIndex, long long int lastIndex) {
         if (variableContainers.count(name) != 0) {
             std::string text = "Tablica o tej nazwie zostala wczesniej zadeklarowana!";
@@ -100,7 +130,7 @@ public:
             std::cerr << "Zarządca zmiennych stworzył tablice \"" << name << "\"" << std::endl;
         variableContainers[name] = new VariableContainer(stack, firstIndex, lastIndex);
         long long int size = lastIndex - firstIndex + 1;
-
+        variableContainers[name]->setAsArray();
         stack += size;
 
         return new INCH(size);      
@@ -202,6 +232,24 @@ public:
     }
 
     */
+
+    void initializeVariable(std::string containerName, int index) {
+        if (variableContainers.count(containerName) == 0) {
+            std::string text = "Kontener \"" + containerName + "\" nie istnieje!";
+            throw std::invalid_argument(text);
+        }
+
+        variableContainers[containerName]->initializeVariable(index);
+    }
+
+    bool isUninitialized(std::string containerName, int index) {
+        if (variableContainers.count(containerName) == 0) {
+            std::string text = "Kontener \"" + containerName + "\" nie istnieje!";
+            throw std::invalid_argument(text);
+        }
+
+        return variableContainers[containerName]->isUninitialized(index);
+    }
 
     ~VariableDirector() {
         std::map<std::string, VariableContainer*>::iterator it;

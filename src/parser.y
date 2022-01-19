@@ -7,6 +7,7 @@
 
     extern int yylex();
     extern int yyparse();
+    extern int lineCount;
     extern void set_input_file(FILE* file);
     extern void yylex_destroy();
     int yyerror(std::string);
@@ -86,7 +87,7 @@
 input: program
 
 program:          TOKEN_VAR declarations TOKEN_BEGIN commands TOKEN_END  {if(PARSER_DEBUG) std::cerr << "Tworzę program" << std::endl; ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack(new RESET_STACK()); complexCommand->pushCommandBack($2); complexCommand->pushCommandBack($4); if (DISPLAY_STACK_END) complexCommand->pushCommandBack(new DISPLAY_STACK_N(10));  complexCommand->pushCommandBack(new HALT());   complexCommand->execute(); delete complexCommand;  }
-                | TOKEN_BEGIN commands TOKEN_END { $$ = $2; }
+                | TOKEN_BEGIN commands TOKEN_END {if(PARSER_DEBUG) std::cerr << "Tworzę program" << std::endl; ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack(new RESET_STACK()); complexCommand->pushCommandBack($2); if (DISPLAY_STACK_END) complexCommand->pushCommandBack(new DISPLAY_STACK_N(10));  complexCommand->pushCommandBack(new HALT());   complexCommand->execute(); delete complexCommand;  }
 
 declarations:     declarations TOKEN_COMMA pidentifier { if(PARSER_DEBUG) std::cerr << "Zrobiłem deklaracje, teraz robię zmienną" << std::endl;  ComplexCommand* complexCommand = new ComplexCommand();  complexCommand->pushCommandBack($1);  complexCommand->pushCommandBack(variableDirector->declareVariable(std::string($3))); delete $3;  $$ = complexCommand;   } // { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack(variableDirector->declareVariable($3)); $$ = complexCommand; }
                 | declarations TOKEN_COMMA pidentifier TOKEN_LEFT_SQUARE_BRACKET num TOKEN_COLON num TOKEN_RIGHT_SQUARE_BRACKET {if(PARSER_DEBUG) std::cerr << "Zrobiłem deklaracje, teraz robię tablice" << std::endl;  ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack(variableDirector->declareArray(std::string($3), $5, $7)); delete $3; $$ = complexCommand; }
@@ -96,9 +97,29 @@ declarations:     declarations TOKEN_COMMA pidentifier { if(PARSER_DEBUG) std::c
 commands:         commands command { if(PARSER_DEBUG) std::cerr << "Tworzę ciąg komend" << std::endl; ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack($2); $$ = complexCommand; }
                 | command { if(PARSER_DEBUG) std::cerr << "Tworzę pojedyńczą komende" << std::endl; $$ = $1; }
 
-command:          identifier ASSIGN expression TOKEN_SEMICOLON {if(PARSER_DEBUG)  std::cerr << "Przpisuje wartość zmiennej" << std::endl; ComplexCommand* complexCommand = new ComplexCommand(); if($1->isIterator()) {  throw std::invalid_argument("Cannot assign value to iterator!"); } complexCommand->pushCommandBack($1); complexCommand->pushCommandBack($3); complexCommand->pushCommandBack(variableDirector->assign());  $$ = complexCommand; }
+command:          identifier ASSIGN expression TOKEN_SEMICOLON {
+                    if ($1->isThisVariable()) {
+                        variableDirector->initializeVariable($1->getContainerName(), 0);
+                    }
+
+                    if(PARSER_DEBUG) 
+                    std::cerr << "Przpisuje wartość zmiennej" << std::endl;
+                    ComplexCommand* complexCommand = new ComplexCommand();
+                    if($1->isIterator()) {
+                          throw std::invalid_argument("Cannot assign value to iterator!"); 
+                    }
+                    complexCommand->pushCommandBack($1);
+                    complexCommand->pushCommandBack($3);
+                    complexCommand->pushCommandBack(variableDirector->assign());
+                    $$ = complexCommand; }
                 | TOKEN_WRITE value TOKEN_SEMICOLON { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($2); complexCommand->pushCommandBack(new WRITE()); $$ = complexCommand; }
-                | TOKEN_READ identifier TOKEN_SEMICOLON { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($2); complexCommand->pushCommandBack(new READ()); $$ = complexCommand;}
+                | TOKEN_READ identifier TOKEN_SEMICOLON { 
+                     if ($2->isThisVariable()) {
+                        variableDirector->initializeVariable($2->getContainerName(), 0);
+                    }
+                    
+                    
+                    ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($2); complexCommand->pushCommandBack(new READ()); $$ = complexCommand;}
                 | TOKEN_IF condition TOKEN_THEN commands TOKEN_ELSE commands TOKEN_ENDIF { $$ = new IF($2, $4, $6); }
                 | TOKEN_IF condition TOKEN_THEN commands TOKEN_ENDIF { $$ = new IF_THEN($2, $4); }
                 | TOKEN_WHILE condition TOKEN_DO commands TOKEN_END_WHILE { $$ = new WHILE($2, $4); }
@@ -117,7 +138,8 @@ command:          identifier ASSIGN expression TOKEN_SEMICOLON {if(PARSER_DEBUG)
                     loopBody->pushCommandBack($4);
                     loopBody->pushCommandBack(variableDirector->incrementIterator($2->getIteratorName()));
                     complexCommand->pushCommandBack(new WHILE(condition, loopBody));
-                    $$ = complexCommand; }
+                    $$ = complexCommand; 
+                    variableDirector->undeclareIterator($2->getIteratorName()); }
                 | TOKEN_FOR iterator2 TOKEN_DO commands TOKEN_ENDFOR { 
                     ComplexCommand* complexCommand = new ComplexCommand(); 
                     complexCommand->pushCommandBack($2);
@@ -132,13 +154,15 @@ command:          identifier ASSIGN expression TOKEN_SEMICOLON {if(PARSER_DEBUG)
                     loopBody->pushCommandBack($4);
                     loopBody->pushCommandBack(variableDirector->decrementIterator($2->getIteratorName()));
                     complexCommand->pushCommandBack(new WHILE(condition, loopBody));
-                    $$ = complexCommand; }
+                    $$ = complexCommand; 
+                     variableDirector->undeclareIterator($2->getIteratorName());
+                     }
 
 
 iterator:   pidentifier TOKEN_FROM value TOKEN_TO value { 
                                     ComplexCommand* complexCommand = new ComplexCommand(); 
                                     complexCommand->pushCommandBack(variableDirector->declareIterator(std::string($1)));
-                                    
+                                    variableDirector->initializeVariable(std::string($1), 0);
                                     complexCommand->pushCommandBack(variableDirector->pushAddressOfVariableOntoStack(std::string($1)));
                                     complexCommand->pushCommandBack($3); 
                                     complexCommand->pushCommandBack(variableDirector->assign());
@@ -158,7 +182,7 @@ iterator:   pidentifier TOKEN_FROM value TOKEN_TO value {
 iterator2:   pidentifier TOKEN_FROM value TOKEN_DOWNTO value { 
                                     ComplexCommand* complexCommand = new ComplexCommand(); 
                                     complexCommand->pushCommandBack(variableDirector->declareIterator(std::string($1)));
-                            
+                                    variableDirector->initializeVariable(std::string($1), 0);
                                     complexCommand->pushCommandBack(variableDirector->pushAddressOfVariableOntoStack(std::string($1)));
                                     complexCommand->pushCommandBack($3); 
                                     complexCommand->pushCommandBack(variableDirector->assign());
@@ -190,16 +214,16 @@ condition:        value EQ_TOKEN value { ComplexCommand* complexCommand = new Co
                 | value GEQ_TOKEN value { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack($3); complexCommand->pushCommandBack(new GEQ_CONDITION()); $$ = complexCommand; }
 
 value:            num { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack(new PUSH($1)); $$ = complexCommand; }
-                | identifier { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack(variableDirector->pushVariableOntoStackByAddressOfVariableFromStack());  $$ = complexCommand; } 
+                | identifier { if ($1->isThisVariable()) { if(variableDirector->isUninitialized($1->getContainerName(), 0)) { throw std::invalid_argument("Zmienna nie jest zainicjowana"); }  } ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack($1); complexCommand->pushCommandBack(variableDirector->pushVariableOntoStackByAddressOfVariableFromStack());  $$ = complexCommand; } 
 
-identifier:       pidentifier { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack(variableDirector->pushAddressOfVariableOntoStack(std::string($1))); if(variableDirector->isIterator(std::string($1))) complexCommand->setAsIterator(); delete $1; $$ = complexCommand;  }
-                | pidentifier TOKEN_LEFT_SQUARE_BRACKET num TOKEN_RIGHT_SQUARE_BRACKET { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack(variableDirector->pushAddressOfVariableFromArrayOntoStack(std::string($1), $3)); delete $1; $$ = complexCommand;  }
-                | pidentifier TOKEN_LEFT_SQUARE_BRACKET pidentifier TOKEN_RIGHT_SQUARE_BRACKET  { ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->pushCommandBack(variableDirector->pushAddressOfVariableOntoStack(std::string($3))); complexCommand->pushCommandBack(variableDirector->getIndexFromStackAndPushAddressOfVariableFromArrayOntoStack(std::string($1))); delete $1; delete $3; $$ = complexCommand; }
+identifier:       pidentifier { if (variableDirector->isArray($1)) { throw std::invalid_argument("Użycie tablicy jako zmiennej!");  } ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->setContainer(std::string($1), 0); complexCommand->setAsVariable(); complexCommand->pushCommandBack(variableDirector->pushAddressOfVariableOntoStack(std::string($1))); if(variableDirector->isIterator(std::string($1))) complexCommand->setAsIterator(); delete $1; $$ = complexCommand;  }
+                | pidentifier TOKEN_LEFT_SQUARE_BRACKET num TOKEN_RIGHT_SQUARE_BRACKET { if (variableDirector->isVariable($1)) { throw std::invalid_argument("Użycie zmiennej jako tablicy"); } ComplexCommand* complexCommand = new ComplexCommand(); complexCommand->setAsInitialized(); complexCommand->pushCommandBack(variableDirector->pushAddressOfVariableFromArrayOntoStack(std::string($1), $3)); delete $1; $$ = complexCommand;  }
+                | pidentifier TOKEN_LEFT_SQUARE_BRACKET pidentifier TOKEN_RIGHT_SQUARE_BRACKET  { if (variableDirector->isVariable($1)) { throw std::invalid_argument("Użycie zmiennej jako tablicy");  }   if (variableDirector->isArray($3)) { throw std::invalid_argument("Użycie tablicy jako zmiennej!");  } ComplexCommand* complexCommand = new ComplexCommand();  complexCommand->setAsInitialized(); complexCommand->pushCommandBack(variableDirector->pushAddressOfVariableOntoStack(std::string($3))); complexCommand->pushCommandBack(variableDirector->getIndexFromStackAndPushAddressOfVariableFromArrayOntoStack(std::string($1))); delete $1; delete $3; $$ = complexCommand; }
                 
 %%
 
 int yyerror(std::string error) {	
-    std::cout << error << std::endl;
+        throw std::invalid_argument(error);
 }
 
 int main(int argc, char** argv) {
@@ -221,7 +245,13 @@ int main(int argc, char** argv) {
 
 
     set_input_file(file);
-    yyparse();
+    try {
+        yyparse();
+    }
+    catch(const std::exception & ex) {
+        std::cerr << "Błąd w linii " << lineCount << ": " << ex.what() <<  std::endl; 
+    }
+
     yylex_destroy();
     fclose(file);
     

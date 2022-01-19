@@ -4,6 +4,7 @@
 #include "Variable.h"
 #include <vector>
 #include "Commands/commands.h"
+#include <set>
 
 class VariableContainer {
 private:
@@ -12,6 +13,9 @@ private:
     long long int lastIndex;
     long long int size;
     bool iterator = false;
+    bool isThisArray = false;
+    std::set<int> initializedVariables;
+
 public:
     VariableContainer(long long int address, long long int firstIndex, long long int lastIndex) {
         this->firstIndex = firstIndex;
@@ -20,13 +24,48 @@ public:
         this->containerAddress = address;
 
         if (firstIndex > lastIndex) {
-            std::string text = "pierwszy indeks tablicy jest wiekszy od drugiego!";
+            std::string text = "Pierwszy indeks tablicy jest wiekszy od drugiego!";
             throw std::invalid_argument(text);
         }
     }
 
+    void initializeVariable(int index) {
+        if (index < firstIndex || index > lastIndex) {
+            std::string text = "Niepoprawny indeks!";
+            throw std::invalid_argument(text);
+        }
+
+        initializedVariables.insert(index);
+    }
+
+    bool isUninitialized(int index) {
+        if (index < firstIndex || index > lastIndex) {
+            std::string text = "Niepoprawny indeks!";
+            throw std::invalid_argument(text);
+        }
+
+        return initializedVariables.count(index) == 0;
+    }
+
     void setAsIterator() {
         iterator = true;
+        isThisArray = false;
+    }
+
+    void setAsArray() {
+        isThisArray = true;
+    }
+
+    void setAsVariable() {
+        isThisArray = false;
+    }
+
+    bool isArray() {
+        return isThisArray;
+    }
+
+    bool isVariable() {
+        return !isThisArray;
     }
 
     bool isIterator() {

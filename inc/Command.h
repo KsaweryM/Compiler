@@ -10,8 +10,12 @@ class Command {
 protected:
 	bool iterator = false;
 	int anonymousIndex = -1;
-
+	//bool useArray = false;
+	bool isVariable = false;
+	int containerIndex;
+	std::string containerName;
 	std::string iteratorName;
+	bool uninitialized  = false;
 
 	std::string registerToString(VMregister instructionRegister) {
 		switch (instructionRegister) {
@@ -42,6 +46,14 @@ public:
 
 	virtual void execute() = 0;
 
+	void setAsVariable() {
+		isVariable = true;
+	}
+
+	bool isThisVariable() {
+		return isVariable;
+	}
+
 	virtual ~Command() {
 
 	}
@@ -49,6 +61,23 @@ public:
 	void setAsIterator() {
 		iterator = true;
 	}
+	/*
+	void setAsArray() {
+		useArray = true;
+	}
+
+	void setAsVariable() {
+		useArray = false;
+	}
+
+	bool isArray() {
+		return useArray;
+	}
+
+	bool isVariable() {
+		return !useArray;
+	}
+	*/
 
 	bool isIterator() {
 		return iterator;
@@ -68,6 +97,27 @@ public:
 
 	std::string getIteratorName() {
 		return iteratorName;
+	}
+
+	void setAsInitialized() {
+		uninitialized = false;
+	}
+
+	bool isUninitialized() {
+		return uninitialized;
+	}
+
+	void setContainer(std::string containerName, int containerIndex) {
+			this->containerName = containerName;
+			this->containerIndex = containerIndex;
+	}
+
+	std::string getContainerName() {
+		return containerName;
+	}
+
+	int getContainerIndex() {
+		return containerIndex;
 	}
 };
 
