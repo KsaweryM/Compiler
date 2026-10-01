@@ -1,0 +1,8 @@
+( The VAR section is optional.
+
+  output: 5 -7
+)
+BEGIN
+    WRITE 5;
+    WRITE -7;
+END

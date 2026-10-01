@@ -1,0 +1,14 @@
+( Comments are enclosed in parentheses, may span several lines
+  and may appear between any two tokens.
+
+  input:  4
+  output: 8
+)
+VAR ( declarations ) a,
+    ( a comment
+      spanning lines ) b
+BEGIN
+    READ ( from the input ) a;
+    b ASSIGN a ( left ) TIMES ( right ) 2;
+    WRITE b; ()
+END

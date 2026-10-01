@@ -1,0 +1,8 @@
+( Characters outside the language are rejected.
+  error: 7: unexpected character '+'
+)
+VAR
+    a
+BEGIN
+    a ASSIGN 1 + 2;
+END

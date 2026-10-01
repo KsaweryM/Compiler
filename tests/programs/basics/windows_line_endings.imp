@@ -1,0 +1,12 @@
+( Lines may also end with CR LF, as in files written on Windows.
+
+  input:  41
+  output: 42
+)
+VAR
+    a
+BEGIN
+    READ a;
+    a ASSIGN a PLUS 1;
+    WRITE a;
+END

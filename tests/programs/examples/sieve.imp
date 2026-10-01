@@ -1,0 +1,22 @@
+( Sieve of Eratosthenes: prints the primes up to 100.
+
+  output: 2 3 5 7 11 13 17 19 23 29 31 37 41 43 47 53 59 61 67 71 73 79 83 89 97
+)
+VAR
+    n, j, sieve[2:100]
+BEGIN
+    n ASSIGN 100;
+    FOR i FROM n DOWNTO 2 DO
+        sieve[i] ASSIGN 1;
+    ENDFOR
+    FOR i FROM 2 TO n DO
+        IF sieve[i] NEQ 0 THEN
+            j ASSIGN i PLUS i;
+            WHILE j LEQ n DO
+                sieve[j] ASSIGN 0;
+                j ASSIGN j PLUS i;
+            ENDWHILE
+            WRITE i;
+        ENDIF
+    ENDFOR
+END

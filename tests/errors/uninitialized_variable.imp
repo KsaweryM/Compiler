@@ -1,0 +1,9 @@
+( A variable cannot be read before it is given a value.
+  error: 8: 'a' is used before being initialized
+)
+VAR
+    a, b
+BEGIN
+    READ b;
+    b ASSIGN a;
+END

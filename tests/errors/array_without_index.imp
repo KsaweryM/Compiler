@@ -1,0 +1,10 @@
+( An array cannot be used without an index.
+  error: 8: 'b' is an array and must be indexed
+  error: 9: 'b' is an array and must be indexed
+)
+VAR
+    a, b[-10:10]
+BEGIN
+    b ASSIGN 1;
+    a ASSIGN b;
+END

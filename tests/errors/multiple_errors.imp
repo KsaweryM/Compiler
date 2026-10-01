@@ -1,0 +1,14 @@
+( All semantic errors are reported at once, not only the first one.
+  error: 10: 'x' is not declared
+  error: 11: 'a' is used before being initialized
+  error: 12: 't' is an array and must be indexed
+  error: 13: index 3 is out of bounds for array 't' [1:2]
+)
+VAR
+    a, b, t[1:2]
+BEGIN
+    READ x;
+    b ASSIGN a;
+    t ASSIGN b;
+    t[3] ASSIGN b;
+END

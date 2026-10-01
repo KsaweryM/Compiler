@@ -1,0 +1,34 @@
+( Division rounds toward minus infinity and the remainder takes the sign of the divisor.
+  Computes a DIV b and a MOD b for every combination of signs of 26 and 7.
+
+  input:  26 7
+  output: 3 5 -4 -2 3 -5 -4 2
+)
+VAR
+    a, b, c
+BEGIN
+    READ a;
+    READ b;
+    c ASSIGN a DIV b;
+    WRITE c;
+    c ASSIGN a MOD b;
+    WRITE c;
+
+    b ASSIGN -1 TIMES b; ( a, -b )
+    c ASSIGN a DIV b;
+    WRITE c;
+    c ASSIGN a MOD b;
+    WRITE c;
+
+    a ASSIGN a TIMES -1; ( -a, -b )
+    c ASSIGN a DIV b;
+    WRITE c;
+    c ASSIGN a MOD b;
+    WRITE c;
+
+    b ASSIGN -1 TIMES b; ( -a, b )
+    c ASSIGN a DIV b;
+    WRITE c;
+    c ASSIGN a MOD b;
+    WRITE c;
+END

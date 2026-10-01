@@ -1,0 +1,8 @@
+( A variable used as an array index must have a value too.
+  error: 7: 'k' is used before being initialized
+)
+VAR
+    k, t[0:9]
+BEGIN
+    t[k] ASSIGN 1;
+END

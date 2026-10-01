@@ -1,0 +1,8 @@
+( READ cannot modify a FOR iterator either.
+  error: 6: cannot modify loop iterator 'i'
+)
+BEGIN
+    FOR i FROM 1 TO 3 DO
+        READ i;
+    ENDFOR
+END

@@ -1,0 +1,34 @@
+( Prime factorization: prints every prime factor followed by its exponent.
+
+  input:  1234567890
+  output: 2 1 3 2 5 1 3607 1 3803 1
+  input:  12
+  output: 2 2 3 1
+)
+VAR
+    n, m, remainder, power, divisor
+BEGIN
+    READ n;
+    divisor ASSIGN 2;
+    m ASSIGN divisor TIMES divisor;
+    WHILE n GEQ m DO
+        power ASSIGN 0;
+        remainder ASSIGN n MOD divisor;
+        WHILE remainder EQ 0 DO
+            n ASSIGN n DIV divisor;
+            power ASSIGN power PLUS 1;
+            remainder ASSIGN n MOD divisor;
+        ENDWHILE
+        IF power GE 0 THEN ( was a factor found? )
+            WRITE divisor;
+            WRITE power;
+        ELSE
+            divisor ASSIGN divisor PLUS 1;
+            m ASSIGN divisor TIMES divisor;
+        ENDIF
+    ENDWHILE
+    IF n NEQ 1 THEN ( the last factor )
+        WRITE n;
+        WRITE 1;
+    ENDIF
+END

@@ -1,0 +1,11 @@
+( A FOR iterator exists only inside its loop.
+  error: 10: 'i' is not declared
+)
+VAR
+    a, b[0:9]
+BEGIN
+    FOR i FROM 0 TO 9 DO
+        b[i] ASSIGN i TIMES i;
+    ENDFOR
+    a ASSIGN b[i];
+END

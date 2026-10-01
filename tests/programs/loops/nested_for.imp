@@ -1,0 +1,26 @@
+( Three nested FOR loops, counting up and down, accumulating into variables read from the input.
+
+  input:  0 0 0
+  output: 31000 40900 2222010
+  input:  1 0 2
+  output: 31001 40900 2222012
+)
+VAR
+    a, b, c
+BEGIN
+    READ a;
+    READ b;
+    READ c;
+    FOR i FROM 111091 TO 111110 DO
+        FOR j FROM 209 DOWNTO 200 DO
+            FOR k FROM 11 TO 20 DO
+                a  ASSIGN  a PLUS k;
+            ENDFOR
+            b  ASSIGN  b PLUS j;
+        ENDFOR
+        c  ASSIGN  c PLUS i;
+    ENDFOR
+    WRITE a;
+    WRITE b;
+    WRITE c;
+END

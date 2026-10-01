@@ -1,0 +1,9 @@
+( A name can be declared only once.
+  error: 5: 'a' is already declared
+)
+VAR
+    a, b, a
+BEGIN
+    READ a;
+    b ASSIGN a;
+END

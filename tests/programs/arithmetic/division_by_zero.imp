@@ -1,0 +1,24 @@
+( Dividing by zero is not an error: both DIV and MOD give 0.
+  Prints a DIV a, a DIV b, a MOD a and a MOD b.
+
+  input:  1 0
+  output: 1 0 0 0
+  input:  0 0
+  output: 0 0 0 0
+  input:  -5 0
+  output: 1 0 0 0
+)
+VAR
+    a, b, c
+BEGIN
+    READ a;
+    READ b;
+    c ASSIGN a DIV a;
+    WRITE c;
+    c ASSIGN a DIV b;
+    WRITE c;
+    c ASSIGN a MOD a;
+    WRITE c;
+    c ASSIGN a MOD b;
+    WRITE c;
+END

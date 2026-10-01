@@ -1,0 +1,86 @@
+( Operations with a constant operand or the same variable on both sides.
+  The compiler handles many of them specially: multiplication by shifts and additions,
+  division by a power of two with a single SHIFT, operations on two constants at compile time.
+
+  input:  13
+  output: 104 -39 0 13000 91 169 3 -4 13 -13 0 1 1 5 -3 0 6 0 0 7 9 1000013 10 -8 26 0 -4 -3 -4 3 -42 -7
+  input:  -13
+  output: -104 39 0 -13000 -91 169 -4 3 -13 13 0 -2 1 3 -5 0 1 0 0 -8 -4 999987 -16 18 -26 0 -4 -3 -4 3 -42 -7
+  input:  0
+  output: 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1000000 -3 5 0 0 -4 -3 -4 3 -42 -7
+)
+VAR
+    x, y
+BEGIN
+    READ x;
+
+    y ASSIGN x TIMES 8;
+    WRITE y;
+    y ASSIGN x TIMES -3;
+    WRITE y;
+    y ASSIGN x TIMES 0;
+    WRITE y;
+    y ASSIGN x TIMES 1000;
+    WRITE y;
+    y ASSIGN 7 TIMES x;
+    WRITE y;
+    y ASSIGN x TIMES x;
+    WRITE y;
+
+    y ASSIGN x DIV 4;
+    WRITE y;
+    y ASSIGN x DIV -4;
+    WRITE y;
+    y ASSIGN x DIV 1;
+    WRITE y;
+    y ASSIGN x DIV -1;
+    WRITE y;
+    y ASSIGN x DIV 0;
+    WRITE y;
+    y ASSIGN x DIV 7;
+    WRITE y;
+    y ASSIGN x DIV x;
+    WRITE y;
+
+    y ASSIGN x MOD 8;
+    WRITE y;
+    y ASSIGN x MOD -8;
+    WRITE y;
+    y ASSIGN x MOD 1;
+    WRITE y;
+    y ASSIGN x MOD 7;
+    WRITE y;
+    y ASSIGN x MOD 0;
+    WRITE y;
+    y ASSIGN x MOD x;
+    WRITE y;
+
+    y ASSIGN 100 DIV x;
+    WRITE y;
+    y ASSIGN 100 MOD x;
+    WRITE y;
+
+    y ASSIGN x PLUS 1000000;
+    WRITE y;
+    y ASSIGN x MINUS 3;
+    WRITE y;
+    y ASSIGN 5 MINUS x;
+    WRITE y;
+    y ASSIGN x PLUS x;
+    WRITE y;
+    y ASSIGN x MINUS x;
+    WRITE y;
+
+    y ASSIGN 17 DIV -5;
+    WRITE y;
+    y ASSIGN 17 MOD -5;
+    WRITE y;
+    y ASSIGN -17 DIV 5;
+    WRITE y;
+    y ASSIGN -17 MOD 5;
+    WRITE y;
+    y ASSIGN 6 TIMES -7;
+    WRITE y;
+    y ASSIGN 3 MINUS 10;
+    WRITE y;
+END

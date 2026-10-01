@@ -1,0 +1,29 @@
+( Every relation, with variables, with a constant on either side and with the same variable
+  on both sides. Prints 1 when the condition holds and 0 otherwise.
+
+  input:  3 5
+  output: 0 1 1 0 1 0 0 0 0 1 0
+  input:  5 3
+  output: 0 1 0 1 0 1 0 1 1 1 0
+  input:  4 4
+  output: 1 0 0 0 1 1 1 0 1 1 0
+  input:  -2 -2
+  output: 1 0 0 0 1 1 0 0 0 1 0
+)
+VAR
+    a, b
+BEGIN
+    READ a;
+    READ b;
+    IF a EQ b THEN WRITE 1; ELSE WRITE 0; ENDIF
+    IF a NEQ b THEN WRITE 1; ELSE WRITE 0; ENDIF
+    IF a LE b THEN WRITE 1; ELSE WRITE 0; ENDIF
+    IF a GE b THEN WRITE 1; ELSE WRITE 0; ENDIF
+    IF a LEQ b THEN WRITE 1; ELSE WRITE 0; ENDIF
+    IF a GEQ b THEN WRITE 1; ELSE WRITE 0; ENDIF
+    IF 4 EQ a THEN WRITE 1; ELSE WRITE 0; ENDIF
+    IF 4 LE a THEN WRITE 1; ELSE WRITE 0; ENDIF
+    IF a GEQ 4 THEN WRITE 1; ELSE WRITE 0; ENDIF
+    IF a EQ a THEN WRITE 1; ELSE WRITE 0; ENDIF
+    IF a LE a THEN WRITE 1; ELSE WRITE 0; ENDIF
+END

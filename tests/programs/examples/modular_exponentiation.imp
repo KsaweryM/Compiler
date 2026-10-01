@@ -1,0 +1,25 @@
+( Computes a^b mod c by repeated squaring.
+
+  input:  1234567890 1234567890987654321 987654321
+  output: 674106858
+)
+VAR
+    a, b, c, result, power, bit
+BEGIN
+    READ a;
+    READ b;
+    READ c;
+    result ASSIGN 1;
+    power ASSIGN a MOD c;
+    WHILE b GE 0 DO
+    bit ASSIGN b MOD 2;
+    IF bit EQ 1 THEN
+        result ASSIGN result TIMES power;
+        result ASSIGN result MOD c;
+    ENDIF
+    b ASSIGN b DIV 2;
+    power ASSIGN power TIMES power;
+    power ASSIGN power MOD c;
+    ENDWHILE
+    WRITE result;
+END

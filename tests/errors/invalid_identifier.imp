@@ -1,0 +1,9 @@
+( Identifiers consist of letters and underscores only, so a1 is read as a followed by 1.
+  error: 5: syntax error, unexpected number
+)
+VAR
+    a1, b
+BEGIN
+    READ a1;
+    b ASSIGN a1;
+END

@@ -1,0 +1,7 @@
+( A comment has to be closed.
+  error: 6: unterminated comment
+)
+BEGIN
+    WRITE 1;
+END ( this comment
+    never ends

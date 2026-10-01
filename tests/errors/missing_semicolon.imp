@@ -1,0 +1,7 @@
+( Every command ends with a semicolon.
+  error: 6: syntax error, unexpected WRITE
+)
+BEGIN
+    WRITE 1
+    WRITE 2;
+END

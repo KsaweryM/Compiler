@@ -1,0 +1,9 @@
+( Only arrays can be indexed.
+  error: 8: 'a' is not an array
+)
+VAR
+    a, b[1:20]
+BEGIN
+    a ASSIGN 1;
+    a[1] ASSIGN b[a];
+END

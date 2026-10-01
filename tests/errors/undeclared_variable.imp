@@ -1,0 +1,9 @@
+( Every variable has to be declared.
+  error: 7: 'a' is not declared
+)
+VAR
+    b
+BEGIN
+    READ a;
+    b ASSIGN a;
+END

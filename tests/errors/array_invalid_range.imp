@@ -1,0 +1,9 @@
+( The first index of an array cannot be greater than the last one.
+  error: 5: array 'b' has an invalid range [11:10]
+)
+VAR
+    a, b[11:10]
+BEGIN
+    b[10] ASSIGN 1;
+    a ASSIGN b[10];
+END

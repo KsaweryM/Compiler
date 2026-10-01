@@ -1,0 +1,6 @@
+( Numbers have to fit in a 64-bit signed integer.
+  error: 5: number 99999999999999999999 is out of range
+)
+BEGIN
+    WRITE 99999999999999999999;
+END

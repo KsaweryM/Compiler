@@ -1,0 +1,32 @@
+( WHILE checks its condition before each iteration, so it may not run at all;
+  REPEAT checks it after each iteration, so it always runs at least once.
+
+  output: 3 2 1 0 7 1 2 3 1 2 3
+)
+VAR
+    n, m, k
+BEGIN
+    n ASSIGN 3;
+    WHILE n GEQ 0 DO
+        WRITE n;
+        n ASSIGN n MINUS 1;
+    ENDWHILE
+
+    WHILE n GE 100 DO
+        WRITE 999;
+    ENDWHILE
+
+    REPEAT
+        WRITE 7;
+    UNTIL 1 EQ 1;
+
+    m ASSIGN 0;
+    REPEAT
+        k ASSIGN 0;
+        REPEAT
+            k ASSIGN k PLUS 1;
+            WRITE k;
+        UNTIL k EQ 3;
+        m ASSIGN m PLUS 1;
+    UNTIL m GEQ 2;
+END

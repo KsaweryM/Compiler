@@ -1,0 +1,22 @@
+( Fills arrays in a DOWNTO loop and multiplies them element by element; the loop ranges
+  come from array elements.
+
+  output: 0 24 46 66 84 100 114 126 136 144 150 154 156 156 154 150 144 136 126 114 100 84 66 46 24 0
+)
+VAR
+    n, j, ta[0:25], tb[0:25], tc[0:25]
+BEGIN
+    n  ASSIGN  25;
+    tc[0]  ASSIGN  n;
+    tc[n]  ASSIGN  n MINUS n;
+    FOR i FROM tc[0] DOWNTO tc[n] DO
+        ta[i]  ASSIGN  i;
+        tb[i]  ASSIGN  n MINUS i;
+    ENDFOR
+    FOR i FROM tc[n] TO tc[0] DO
+        tc[i]  ASSIGN  ta[i] TIMES tb[i];
+    ENDFOR
+    FOR i FROM 0 TO n DO
+        WRITE tc[i];
+    ENDFOR
+END

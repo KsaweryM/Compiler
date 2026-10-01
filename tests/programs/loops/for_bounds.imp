@@ -1,0 +1,31 @@
+( The range of a FOR loop is evaluated once, before the first iteration: changing the
+  variables it was computed from does not change the number of iterations.
+  An empty range runs no iterations and DOWNTO counts down.
+
+  output: 6 6 3 2 1 -2 6
+)
+VAR
+    n, s
+BEGIN
+    n ASSIGN 3;
+    s ASSIGN 0;
+    FOR i FROM 1 TO n DO
+        n ASSIGN n PLUS 1;
+        s ASSIGN s PLUS i;
+    ENDFOR
+    WRITE s;
+    WRITE n;
+
+    FOR i FROM 5 TO 4 DO
+        WRITE i;
+    ENDFOR
+    FOR i FROM 3 DOWNTO 1 DO
+        WRITE i;
+    ENDFOR
+    FOR i FROM -2 TO -2 DO
+        WRITE i;
+    ENDFOR
+    FOR i FROM n DOWNTO s DO
+        WRITE i;
+    ENDFOR
+END

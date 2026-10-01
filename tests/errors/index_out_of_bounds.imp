@@ -1,0 +1,8 @@
+( A constant index has to lie within the range of the array.
+  error: 7: index 10 is out of bounds for array 't' [0:9]
+)
+VAR
+    t[0:9]
+BEGIN
+    t[10] ASSIGN 1;
+END

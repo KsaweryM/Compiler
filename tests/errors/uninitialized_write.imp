@@ -1,0 +1,8 @@
+( WRITE of a variable that was never given a value.
+  error: 7: 'a' is used before being initialized
+)
+VAR
+    a
+BEGIN
+    WRITE a;
+END

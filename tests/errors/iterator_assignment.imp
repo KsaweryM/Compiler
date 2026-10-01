@@ -1,0 +1,12 @@
+( A FOR iterator cannot be modified inside its loop.
+  error: 9: cannot modify loop iterator 'i'
+)
+VAR
+    a, b[0:9]
+BEGIN
+    FOR i FROM 0 TO 9 DO
+        b[i] ASSIGN i TIMES i;
+        i ASSIGN i PLUS 2;
+    ENDFOR
+    a ASSIGN b[1];
+END
