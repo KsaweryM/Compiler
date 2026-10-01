@@ -1,19 +1,80 @@
-make: clean
-	rm -rf build
-	mkdir  build
-	bison -o build/parser_y.c -d src/parser.y
-	flex -o build/scanner_l.c src/scanner.l
-	g++ -o build/kompilator build/parser_y.c build/scanner_l.c -lm 
+# Build the compiler:            make
+# Debug build with sanitizers:   make debug
+# Run the test suite:            make test
+# Compare against an oracle:     make fuzz
+# Compile and run one program:   make run PROGRAM=tests/programs/examples/sieve.imp
+#
+# Tools and flags can be overridden, e.g. `make CXX=clang++ BISON=/opt/bison/bin/bison`.
 
-test: build	
-	rm -f build/asembler
-	./build/kompilator test/input.txt build/asembler
-	./vm/vm build/asembler
+CXX      ?= g++
+BISON    ?= bison
+FLEX     ?= flex
+PYTHON   ?= python3
+VM       ?= vm/vm
 
-test2: build	
-	rm -f build/asembler
-	./build/kompilator test/input.txt build/asembler
-	./vm/vm-cln build/asembler
+CXXFLAGS ?= -O2
+CXXFLAGS += -std=c++17 -Wall -Wextra -Wpedantic
+LDFLAGS  ?=
+
+BUILD    ?= build/release
+TARGET   := $(BUILD)/kompilator
+GENDIR   := $(BUILD)/generated
+
+SOURCES  := $(shell find src -mindepth 2 -name '*.cpp')
+OBJECTS  := $(SOURCES:src/%.cpp=$(BUILD)/obj/%.o) $(GENDIR)/Parser.o $(GENDIR)/Lexer.o
+CPPFLAGS := -Isrc -I$(GENDIR) -MMD -MP
+
+.PHONY: all debug test fuzz run clean help
+
+all: $(TARGET)
+	@ln -sfn $(abspath $(TARGET)) build/kompilator
+
+debug:
+	@$(MAKE) --no-print-directory BUILD=build/debug \
+		CXXFLAGS="-O0 -g -fsanitize=address,undefined" LDFLAGS="-fsanitize=address,undefined"
+
+$(TARGET): $(OBJECTS)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^
+
+# --- generated parser and lexer -------------------------------------------------------
+
+$(GENDIR)/Parser.cpp: src/frontend/Parser.y
+	@mkdir -p $(@D)
+	$(BISON) -d -o $@ $<
+
+$(GENDIR)/Parser.hpp: $(GENDIR)/Parser.cpp ;
+
+$(GENDIR)/Lexer.cpp: src/frontend/Lexer.l
+	@mkdir -p $(@D)
+	$(FLEX) -o $@ $<
+
+$(GENDIR)/%.o: $(GENDIR)/%.cpp $(GENDIR)/Parser.hpp
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
+
+# --- hand-written sources ----------------------------------------------------------------
+
+$(BUILD)/obj/%.o: src/%.cpp | $(GENDIR)/Parser.hpp
+	@mkdir -p $(@D)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
+
+-include $(OBJECTS:.o=.d)
+
+# --- tasks -------------------------------------------------------------------------------
+
+test: all
+	@tests/run_tests.sh $(TARGET) $(VM)
+
+fuzz: all
+	@$(PYTHON) tests/fuzz.py --compiler $(TARGET) --vm $(VM)
+
+run: all
+	@test -n "$(PROGRAM)" || { echo "usage: make run PROGRAM=<file.imp>"; exit 1; }
+	@mkdir -p $(BUILD)/run
+	$(TARGET) $(PROGRAM) $(BUILD)/run/program.mr
+	$(VM) $(BUILD)/run/program.mr
 
 clean:
-	rm -rf build/
+	rm -rf build
+
+help:
+	@sed -n 's/^# \{0,1\}//p' Makefile | sed -n '1,/^$$/p'
